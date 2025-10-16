@@ -14,6 +14,7 @@
 
         .card {
             transition: all 0.2s ease;
+            will-change: transform, box-shadow; /* Optimization for animations */
         }
 
         .card:hover {
@@ -39,12 +40,8 @@
         }
 
         #modalImageContainer.zoomed {
-            cursor: grab;
-            overflow: auto;
-        }
-
-        #modalImageContainer.zoomed:active {
-            cursor: grabbing;
+            cursor: crosshair;
+            overflow: hidden; /* Changed from auto to hidden for smooth mouse pan */
         }
 
         #modalImage {
@@ -56,16 +53,16 @@
             margin: auto;
             object-fit: contain;
             transition: transform 0.2s ease;
+            pointer-events: none; /* Prevent image from capturing mouse events */
+            will-change: transform; /* Optimization for panning */
         }
 
         #modalImageContainer.zoomed #modalImage {
             max-width: none;
             max-height: none;
-            cursor: grab;
-        }
-
-        #modalImageContainer.zoomed:active #modalImage {
-            cursor: grabbing;
+            cursor: crosshair;
+            /* Use a very fast, linear transition for panning to feel instantaneous */
+            transition: transform 0.05s linear;
         }
 
         /* Smooth scrollbar */
@@ -133,7 +130,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Combined Azimuth Range (CAZ)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/caz_ngp.gif" alt="CAZ" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Radar/caz_ngp.gif" alt="CAZ" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -144,7 +141,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Plan Position Indicator (PPI)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/ppi_ngp.gif" alt="PPI" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Radar/ppi_ngp.gif" alt="PPI" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -155,7 +152,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Surface Rainfall Intensity (SRI)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/sri_ngp.gif" alt="SRI" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Radar/sri_ngp.gif" alt="SRI" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -166,7 +163,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Reflectivity (PPZ)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/ppz_ngp.gif" alt="PPZ" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Radar/ppz_ngp.gif" alt="PPZ" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -177,7 +174,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Precipitation Accumulation (PAC)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/pac_ngp.gif" alt="PAC" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Radar/pac_ngp.gif" alt="PAC" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -188,7 +185,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Doppler Velocity (PPV)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/ppv_ngp.gif" alt="PPV" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Radar/ppv_ngp.gif" alt="PPV" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -199,7 +196,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Volume-Velocity Processing (VP2)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/vp2_ngp.gif" alt="VP2" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Radar/vp2_ngp.gif" alt="VP2" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -213,7 +210,7 @@
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_SRI.gif" alt="SRI Animated" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_SRI.gif" alt="SRI Animated" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -227,7 +224,7 @@
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_MAXZ.gif" alt="MAXZ Animated" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_MAXZ.gif" alt="MAXZ Animated" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -246,7 +243,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Asia Sector - Infrared</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ir1.jpg" alt="Asia IR1" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ir1.jpg" alt="Asia IR1" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -257,7 +254,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Asia Sector - Visible</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_vis.jpg" alt="Asia VIS" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_vis.jpg" alt="Asia VIS" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -268,7 +265,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Asia Sector - Water Vapour</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_wv.jpg" alt="Asia WV" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_wv.jpg" alt="Asia WV" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -279,7 +276,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Asia Sector - CTBT</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ctbt.jpg" alt="Asia CTBT" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ctbt.jpg" alt="Asia CTBT" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -290,7 +287,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Global - Infrared</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_ir1.jpg" alt="Globe IR1" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_ir1.jpg" alt="Globe IR1" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -301,7 +298,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Global - Visible</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_vis.jpg" alt="Globe VIS" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_vis.jpg" alt="Globe VIS" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -312,7 +309,7 @@
                             <h3 class="text-sm font-semibold text-gray-800">Global - Water Vapour</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_wv.jpg" alt="Globe WV" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_wv.jpg" alt="Globe WV" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -326,7 +323,7 @@
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/Converted/IR1.gif" alt="IR1 Animated" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/IR1.gif" alt="IR1 Animated" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -340,7 +337,7 @@
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/Converted/VIS.gif" alt="VIS Animated" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/VIS.gif" alt="VIS Animated" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -354,7 +351,7 @@
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/Converted/WV.gif" alt="WV Animated" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/WV.gif" alt="WV Animated" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -368,7 +365,7 @@
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/Converted/CTBT.gif" alt="CTBT Animated" class="w-full h-auto"
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/CTBT.gif" alt="CTBT Animated" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -393,7 +390,7 @@
     <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50 p-4">
         <div class="relative bg-white rounded-lg w-full max-w-6xl h-[90vh] flex flex-col shadow-2xl">
             <!-- Header -->
-            <div class="flex justify-between items-start p-4 border-b border-gray-200 flex-shrink-0">
+            <div id="modalHeader" class="flex justify-between items-start p-4 border-b border-gray-200 flex-shrink-0">
                 <div class="flex-1">
                     <h3 id="modalTitle" class="text-lg font-semibold text-gray-900"></h3>
                 </div>
@@ -416,7 +413,7 @@
             </div>
 
             <!-- Footer -->
-            <div class="p-4 border-t border-gray-200 flex-shrink-0">
+            <div id="modalFooter" class="p-4 border-t border-gray-200 flex-shrink-0">
                 <p id="modalDescription" class="text-sm text-gray-600"></p>
             </div>
 
@@ -438,6 +435,8 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // --- DOM Element Selection ---
+            const mainContent = document.querySelector('main');
             const imageModal = document.getElementById('imageModal');
             const modalImageContainer = document.getElementById('modalImageContainer');
             const modalImage = document.getElementById('modalImage');
@@ -447,117 +446,171 @@
             const prevButton = document.getElementById('prevButton');
             const nextButton = document.getElementById('nextButton');
             const zoomHint = document.getElementById('zoomHint');
-            const imageCards = document.querySelectorAll('main .cursor-pointer');
-
+            const modalHeader = document.getElementById('modalHeader');
+            const modalFooter = document.getElementById('modalFooter');
+            const timestampEl = document.getElementById('timestamp');
+            
+            // --- State Variables ---
             let imagesData = [];
             let currentIndex = 0;
             let isZoomed = false;
-            let isDragging = false;
-            let startX, startY, scrollLeft, scrollTop;
+            let imageFitWidth = 0;
+            let imageFitHeight = 0;
+            const zoomLevel = 2;
+            const imageCards = Array.from(document.querySelectorAll('main .card')); // Convert NodeList to Array for indexOf
 
-            // Collect image data
-            imageCards.forEach((card, index) => {
-                const img = card.querySelector('img');
-                const title = card.querySelector('h3').innerText;
-                const description = card.getAttribute('title');
-                if (img && title && description) {
-                    imagesData.push({ src: img.src, title, description });
-                }
+            // --- Function Definitions ---
 
-                card.addEventListener('click', () => {
-                    currentIndex = index;
-                    openModal();
+            /**
+             * Collects image data from the DOM and stores it in an array.
+             */
+            const collectImageData = () => {
+                imagesData = imageCards.map(card => {
+                    const img = card.querySelector('img');
+                    const title = card.querySelector('h3').innerText;
+                    const description = card.getAttribute('title');
+                    return { src: img.src, title, description };
                 });
-            });
-
-            const openModal = () => {
-                updateModalContent();
-                imageModal.classList.remove('hidden');
-                imageModal.classList.add('flex');
             };
 
+            /**
+             * Updates the modal's content based on the current index.
+             */
             const updateModalContent = () => {
                 const data = imagesData[currentIndex];
                 modalImage.src = data.src;
                 modalTitle.textContent = data.title;
                 modalDescription.textContent = data.description;
 
-                // Reset zoom state
+                // Reset zoom and UI visibility for the new image
                 isZoomed = false;
                 modalImageContainer.classList.remove('zoomed');
                 modalImage.style.transform = '';
                 zoomHint.style.display = 'flex';
-
+                modalHeader.classList.remove('hidden');
+                modalFooter.classList.remove('hidden');
+                
+                // Toggle navigation button visibility
                 prevButton.style.display = currentIndex === 0 ? 'none' : 'block';
                 nextButton.style.display = currentIndex === imagesData.length - 1 ? 'none' : 'block';
             };
+            
+            /**
+             * Opens and displays the image modal.
+             */
+            const openModal = () => {
+                updateModalContent();
+                imageModal.classList.remove('hidden');
+                imageModal.classList.add('flex');
+            };
 
+            /**
+             * Hides and resets the image modal.
+             */
             const hideModal = () => {
                 imageModal.classList.add('hidden');
                 imageModal.classList.remove('flex');
-                modalImage.src = '';
-                isZoomed = false;
-                modalImageContainer.classList.remove('zoomed');
-                modalImage.style.transform = '';
+                modalImage.src = ''; // Clear src to stop loading/animation
             };
 
-            // Zoom functionality
-            modalImageContainer.addEventListener('click', (e) => {
-                if (e.target === modalImage || e.target === modalImageContainer) {
-                    if (!isZoomed) {
-                        // Zoom in
-                        isZoomed = true;
-                        modalImageContainer.classList.add('zoomed');
-                        modalImage.style.transform = 'scale(2)';
-                        zoomHint.style.display = 'none';
-                        
-                        // Scroll to click position
-                        const rect = modalImageContainer.getBoundingClientRect();
-                        const x = e.clientX - rect.left;
-                        const y = e.clientY - rect.top;
-                        
-                        modalImageContainer.scrollLeft = (x * 2) - rect.width / 2;
-                        modalImageContainer.scrollTop = (y * 2) - rect.height / 2;
-                    } else {
-                        // Zoom out
-                        isZoomed = false;
-                        modalImageContainer.classList.remove('zoomed');
-                        modalImage.style.transform = '';
-                        zoomHint.style.display = 'flex';
-                        modalImageContainer.scrollLeft = 0;
-                        modalImageContainer.scrollTop = 0;
+            /**
+             * Toggles the zoom state of the modal image.
+             * @param {MouseEvent} e - The click event object.
+             */
+            const toggleZoom = (e) => {
+                isZoomed = !isZoomed;
+                modalImageContainer.classList.toggle('zoomed');
+                zoomHint.style.display = isZoomed ? 'none' : 'flex';
+                modalHeader.classList.toggle('hidden', isZoomed);
+                modalFooter.classList.toggle('hidden', isZoomed);
+
+                if (isZoomed) {
+                    // Store the image's dimensions before zooming
+                    imageFitWidth = modalImage.offsetWidth;
+                    imageFitHeight = modalImage.offsetHeight;
+                    panImage(e); // Pan to the clicked point immediately
+                } else {
+                    modalImage.style.transform = ''; // Reset transform on zoom out
+                }
+            };
+            
+            /**
+             * Pans the image inside the container based on mouse position.
+             * @param {MouseEvent} e - The mouse event object.
+             */
+            const panImage = (e) => {
+                if (!isZoomed) return;
+
+                const containerRect = modalImageContainer.getBoundingClientRect();
+                const panPadding = 40; // The amount of "overscroll" in pixels
+
+                const zoomedWidth = imageFitWidth * zoomLevel;
+                const zoomedHeight = imageFitHeight * zoomLevel;
+                
+                // Calculate how much the zoomed image overflows the container
+                const overflowX = Math.max(0, zoomedWidth - containerRect.width);
+                const overflowY = Math.max(0, zoomedHeight - containerRect.height);
+
+                // Get mouse position relative to the container
+                const mouseX = e.clientX - containerRect.left;
+                const mouseY = e.clientY - containerRect.top;
+
+                // Calculate the mouse position as a percentage of the container's dimensions
+                const xPercent = Math.max(0, Math.min(1, mouseX / containerRect.width));
+                const yPercent = Math.max(0, Math.min(1, mouseY / containerRect.height));
+                
+                // Calculate the required translation, adding padding to create an "overscroll" effect.
+                const panX = -(xPercent - 0.5) * (overflowX + panPadding * 2);
+                const panY = -(yPercent - 0.5) * (overflowY + panPadding * 2);
+                
+                // Apply the transform. Translation is divided by zoomLevel because scale magnifies it.
+                modalImage.style.transform = `scale(${zoomLevel}) translate(${panX / zoomLevel}px, ${panY / zoomLevel}px)`;
+            };
+
+            /**
+             * Updates the timestamp in the header.
+             */
+            const updateTimestamp = () => {
+                const now = new Date();
+                const options = {
+                    year: 'numeric', month: 'short', day: 'numeric',
+                    hour: '2-digit', minute: '2-digit',
+                    timeZone: 'Asia/Kolkata', hour12: true
+                };
+                timestampEl.textContent = new Intl.DateTimeFormat('en-IN', options).format(now) + ' IST';
+            };
+
+            /**
+             * Navigates to the next or previous image.
+             * @param {number} direction - 1 for next, -1 for previous.
+             */
+            const navigate = (direction) => {
+                const newIndex = currentIndex + direction;
+                if (newIndex >= 0 && newIndex < imagesData.length) {
+                    currentIndex = newIndex;
+                    updateModalContent();
+                }
+            };
+
+            // --- Event Listeners ---
+
+            // Use event delegation for image card clicks for better performance
+            mainContent.addEventListener('click', (e) => {
+                const card = e.target.closest('.card');
+                if (card) {
+                    const index = imageCards.indexOf(card);
+                    if (index > -1) {
+                        currentIndex = index;
+                        openModal();
                     }
                 }
             });
 
-            // Pan functionality when zoomed
-            modalImageContainer.addEventListener('mousedown', (e) => {
-                if (!isZoomed) return;
-                isDragging = true;
-                startX = e.pageX - modalImageContainer.offsetLeft;
-                startY = e.pageY - modalImageContainer.offsetTop;
-                scrollLeft = modalImageContainer.scrollLeft;
-                scrollTop = modalImageContainer.scrollTop;
+            modalImageContainer.addEventListener('click', (e) => {
+                if (e.target === modalImageContainer) toggleZoom(e);
             });
-
-            modalImageContainer.addEventListener('mouseleave', () => {
-                isDragging = false;
-            });
-
-            modalImageContainer.addEventListener('mouseup', () => {
-                isDragging = false;
-            });
-
-            modalImageContainer.addEventListener('mousemove', (e) => {
-                if (!isDragging) return;
-                e.preventDefault();
-                const x = e.pageX - modalImageContainer.offsetLeft;
-                const y = e.pageY - modalImageContainer.offsetTop;
-                const walkX = (x - startX) * 2;
-                const walkY = (y - startY) * 2;
-                modalImageContainer.scrollLeft = scrollLeft - walkX;
-                modalImageContainer.scrollTop = scrollTop - walkY;
-            });
+            
+            modalImageContainer.addEventListener('mousemove', panImage);
 
             closeModal.addEventListener('click', hideModal);
             imageModal.addEventListener('click', (e) => {
@@ -566,55 +619,29 @@
 
             prevButton.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (currentIndex > 0) {
-                    currentIndex--;
-                    updateModalContent();
-                }
+                navigate(-1);
             });
 
             nextButton.addEventListener('click', (e) => {
                 e.stopPropagation();
-                if (currentIndex < imagesData.length - 1) {
-                    currentIndex++;
-                    updateModalContent();
-                }
+                navigate(1);
             });
 
-            // Keyboard navigation
             document.addEventListener('keydown', (e) => {
-                if (!imageModal.classList.contains('flex')) return;
+                if (imageModal.classList.contains('hidden')) return;
                 
                 if (e.key === 'Escape') hideModal();
-                if (e.key === 'ArrowLeft' && currentIndex > 0) {
-                    currentIndex--;
-                    updateModalContent();
-                }
-                if (e.key === 'ArrowRight' && currentIndex < imagesData.length - 1) {
-                    currentIndex++;
-                    updateModalContent();
-                }
+                if (e.key === 'ArrowLeft') navigate(-1);
+                if (e.key === 'ArrowRight') navigate(1);
             });
-
-            // Timestamp
-            const timestampEl = document.getElementById('timestamp');
-            const updateTimestamp = () => {
-                const now = new Date();
-                const options = {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric',
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    timeZone: 'Asia/Kolkata',
-                    hour12: true
-                };
-                timestampEl.textContent = new Intl.DateTimeFormat('en-IN', options).format(now) + ' IST';
-            };
-
+            
+            // --- Initialization ---
+            collectImageData();
             updateTimestamp();
-            setInterval(updateTimestamp, 60000);
+            setInterval(updateTimestamp, 60000); // Update timestamp every minute
         });
     </script>
 </body>
 
 </html>
+
