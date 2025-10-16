@@ -543,7 +543,7 @@
 
                 const containerRect = modalImageContainer.getBoundingClientRect();
                 const panPadding = 40; // The amount of "overscroll" in pixels
-
+                
                 const zoomedWidth = imageFitWidth * zoomLevel;
                 const zoomedHeight = imageFitHeight * zoomLevel;
                 
@@ -555,7 +555,7 @@
                 const mouseX = e.clientX - containerRect.left;
                 const mouseY = e.clientY - containerRect.top;
 
-                // Calculate the mouse position as a percentage of the container's dimensions
+                // Calculate the mouse position as a percentage of the container's dimensions.
                 const xPercent = Math.max(0, Math.min(1, mouseX / containerRect.width));
                 const yPercent = Math.max(0, Math.min(1, mouseY / containerRect.height));
                 
@@ -563,8 +563,8 @@
                 const panX = -(xPercent - 0.5) * (overflowX + panPadding * 2);
                 const panY = -(yPercent - 0.5) * (overflowY + panPadding * 2);
                 
-                // Apply the transform. Translation is divided by zoomLevel because scale magnifies it.
-                modalImage.style.transform = `scale(${zoomLevel}) translate(${panX / zoomLevel}px, ${panY / zoomLevel}px)`;
+                // Apply the transform. The translation is applied directly in screen pixels after the scaling.
+                modalImage.style.transform = `scale(${zoomLevel}) translate(${panX}px, ${panY}px)`;
             };
 
             /**
