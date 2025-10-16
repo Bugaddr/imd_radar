@@ -10,309 +10,426 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
         }
 
-        /* Styles for zoom functionality */
+        .card {
+            transition: all 0.2s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card img {
+            transition: opacity 0.2s;
+        }
+
+        .card:hover img {
+            opacity: 0.95;
+        }
+
+        /* Modal Image Zoom and Pan */
         #modalImageContainer {
-            overflow: auto;
+            overflow: hidden;
             flex-grow: 1;
-            /* Allow container to take available space */
+            position: relative;
+            background: #f9fafb;
+            cursor: zoom-in;
+        }
+
+        #modalImageContainer.zoomed {
+            cursor: grab;
+            overflow: auto;
+        }
+
+        #modalImageContainer.zoomed:active {
+            cursor: grabbing;
         }
 
         #modalImage {
-            cursor: zoom-in;
-            transition: width 0.3s ease-in-out, height 0.3s ease-in-out;
             max-width: 100%;
             max-height: 100%;
+            width: auto;
+            height: auto;
             display: block;
             margin: auto;
-            /* Center the un-zoomed image */
+            object-fit: contain;
+            transition: transform 0.2s ease;
         }
 
-        #modalImage.zoomed {
-            width: 200%;
-            max-width: 200%;
-            height: auto;
-            cursor: zoom-out;
-            margin: 0;
-            /* Reset margin for top-left alignment when zoomed */
+        #modalImageContainer.zoomed #modalImage {
+            max-width: none;
+            max-height: none;
+            cursor: grab;
+        }
+
+        #modalImageContainer.zoomed:active #modalImage {
+            cursor: grabbing;
+        }
+
+        /* Smooth scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
         }
     </style>
 </head>
 
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-50 text-gray-900">
 
-    <div class="px-4 py-8">
-        <!-- Header Section -->
-        <header class="text-center mb-8">
-            <h1 class="text-4xl font-bold text-gray-900">IMD Weather Radar & Satellite - Nagpur</h1>
-            <p class="text-lg text-gray-600 mt-2">Live Doppler Weather Images</p>
-            <p id="timestamp" class="text-sm text-gray-500 mt-1"></p>
+    <div class="min-h-screen px-4 py-6 md:px-6 lg:px-8">
+        <!-- Header -->
+        <header class="max-w-7xl mx-auto mb-8">
+            <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-200">
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-900 mb-1">IMD Weather Radar & Satellite</h1>
+                        <p class="text-gray-600">Nagpur Region - Live Data</p>
+                    </div>
+                    <div class="flex flex-col items-start md:items-end gap-2">
+                        <div class="flex items-center gap-2">
+                            <span class="flex h-2 w-2 relative">
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                            </span>
+                            <span class="text-sm font-medium text-green-600">Live</span>
+                        </div>
+                        <p id="timestamp" class="text-sm text-gray-500"></p>
+                        <button onclick="location.reload()" 
+                            class="text-sm px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Refresh
+                        </button>
+                    </div>
+                </div>
+            </div>
         </header>
 
-        <!-- Main Content Area -->
-        <main>
+        <main class="max-w-7xl mx-auto">
             <!-- Radar Section -->
-            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Doppler Weather Radar</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
-                <!-- Static Radar Images -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="Your best all-in-one view. See exactly where it's raining around Nagpur right now and how heavy it is. Yellows and reds mean heavier rain, perfect for checking if that dark cloud overhead is going to be a downpour.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Combined Azimuth Range (CAZ)</h3>
+            <section class="mb-10">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-300">Doppler Weather Radar</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="Your best all-in-one view. See exactly where it's raining around Nagpur right now and how heavy it is. Yellows and reds mean heavier rain, perfect for checking if that dark cloud overhead is going to be a downpour.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Combined Azimuth Range (CAZ)</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Radar/caz_ngp.gif" alt="CAZ" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
                     </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Radar/caz_ngp.gif"
-                            alt="Nagpur Radar - Combined Azimuth Range (CAZ)" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="Plan Position Indicator (PPI): This is a classic top-down 'radar sweep' of Nagpur, showing precipitation detected at a single, fixed angle of the radar dish. It provides a clear snapshot of a storm's location and structure at that specific altitude, helping forecasters analyze its features.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Plan Position Indicator (PPI)</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Radar/ppi_ngp.gif" alt="PPI" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
                     </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="How hard is it raining? This shows the rainfall rate in mm/hr on the ground. Use this to judge if you're facing a light shower or a heavy spell that could lead to waterlogging on city roads.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Surface Rainfall Intensity (SRI)</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Radar/sri_ngp.gif" alt="SRI" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="Measures the 'thickness' of the rain. Bright colors mean bigger raindrops or even hail. A key tool for identifying the most intense and potentially damaging parts of a storm over the Nagpur region.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Reflectivity (PPZ)</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Radar/ppz_ngp.gif" alt="PPZ" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="How much rain has fallen? This tracks the total rainfall over the last 24 hours. Vital for farmers and for monitoring river levels and potential flooding risk after a period of heavy rain.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Precipitation Accumulation (PAC)</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Radar/pac_ngp.gif" alt="PAC" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="Doppler Velocity (PPV): This map shows the speed and direction of the rain relative to the Nagpur radar. Green colors indicate particles moving *towards* the radar, while red shows them moving *away*. A tight pairing of bright green and red can signify rotation, a key indicator for issuing severe storm and tornado warnings.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Doppler Velocity (PPV)</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Radar/ppv_ngp.gif" alt="PPV" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="A 3D wind map of the storm. This advanced view lets meteorologists analyze the entire wind structure, essential for issuing precise warnings about severe weather events like damaging winds.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Volume-Velocity Processing (VP2)</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Radar/vp2_ngp.gif" alt="VP2" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="Watch the rain move in real-time. This loop shows the path and development of rain over the last few hours. See if the rain is heading towards your location in Nagpur or moving away.">
+                        <div class="p-3 border-b border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-sm font-semibold text-gray-800">Surface Rainfall (Animated)</h3>
+                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_SRI.gif" alt="SRI Animated" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="Tracks the storm's powerhouse. This animation follows the most intense core of the storm, showing where the heaviest rain or hail is and how its strength is changing over time.">
+                        <div class="p-3 border-b border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-sm font-semibold text-gray-800">Max Reflectivity (Animated)</h3>
+                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_MAXZ.gif" alt="MAXZ Animated" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
                 </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="Plan Position Indicator (PPI): This is a classic top-down 'radar sweep' of Nagpur, showing precipitation detected at a single, fixed angle of the radar dish. It provides a clear snapshot of a storm's location and structure at that specific altitude, helping forecasters analyze its features.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Plan Position Indicator (PPI)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Radar/ppi_ngp.gif"
-                            alt="Nagpur Radar - Plan Position Indicator (PPI)" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="How hard is it raining? This shows the rainfall rate in mm/hr on the ground. Use this to judge if you're facing a light shower or a heavy spell that could lead to waterlogging on city roads.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Surface Rainfall Intensity (SRI)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Radar/sri_ngp.gif"
-                            alt="Nagpur Radar - Surface Rainfall Intensity (SRI)" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="Measures the 'thickness' of the rain. Bright colors mean bigger raindrops or even hail. A key tool for identifying the most intense and potentially damaging parts of a storm over the Nagpur region.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Reflectivity (PPZ)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Radar/ppz_ngp.gif"
-                            alt="Nagpur Radar - Reflectivity (PPZ)" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="How much rain has fallen? This tracks the total rainfall over the last 24 hours. Vital for farmers and for monitoring river levels and potential flooding risk after a period of heavy rain.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Precipitation Accumulation (PAC)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Radar/pac_ngp.gif"
-                            alt="Nagpur Radar - Precipitation Accumulation (PAC)" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="Doppler Velocity (PPV): This map shows the speed and direction of the rain relative to the Nagpur radar. Green colors indicate particles moving *towards* the radar, while red shows them moving *away*. A tight pairing of bright green and red can signify rotation, a key indicator for issuing severe storm and tornado warnings.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Doppler Velocity (PPV)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Radar/ppv_ngp.gif"
-                            alt="Nagpur Radar - Doppler Velocity (PPV)" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="A 3D wind map of the storm. This advanced view lets meteorologists analyze the entire wind structure, essential for issuing precise warnings about severe weather events like damaging winds.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Volume-Velocity Processing (VP2)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Radar/vp2_ngp.gif"
-                            alt="Nagpur Radar - Volume-Velocity Processing (VP2)" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <!-- Animated Radar Images -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="Watch the rain move in real-time. This loop shows the path and development of rain over the last few hours. See if the rain is heading towards your location in Nagpur or moving away.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Surface Rainfall Intensity (Animated)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_SRI.gif"
-                            alt="Nagpur Radar - SRI Animated" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="Tracks the storm's powerhouse. This animation follows the most intense core of the storm, showing where the heaviest rain or hail is and how its strength is changing over time.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Maximum Reflectivity (Animated)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_MAXZ.gif"
-                            alt="Nagpur Radar - MAXZ Animated" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-            </div>
+            </section>
 
             <!-- Satellite Section -->
-            <h2 class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Satellite Imagery</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                <!-- Static Satellite Images -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="See clouds day and night. This measures cloud top temperature. The bright white and colored tops over Central India represent taller, colder clouds, often associated with powerful afternoon thunderstorms.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Asia Sector - Infrared</h3>
+            <section class="mb-10">
+                <h2 class="text-xl font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-300">Satellite Imagery</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="See clouds day and night. This measures cloud top temperature. The bright white and colored tops over Central India represent taller, colder clouds, often associated with powerful afternoon thunderstorms.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Asia Sector - Infrared</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ir1.jpg" alt="Asia IR1" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
                     </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ir1.jpg"
-                            alt="Satellite - Asia IR1" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="A real-life photo from space. This shows you exactly what the cloud cover over Nagpur and the surrounding region looks like right now. Perfect for seeing the texture and spread of daytime clouds.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Asia Sector - Visible</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_vis.jpg" alt="Asia VIS" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
                     </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="The atmosphere's moisture map. Bright white areas show deep moisture, the fuel for thunderstorms. Dark areas are dry air. Use this to see if more moisture is flowing into the region, potentially fueling more rain.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Asia Sector - Water Vapour</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_wv.jpg" alt="Asia WV" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="Pinpoints the strongest storms. This highlights the coldest (and therefore highest) cloud tops with vibrant colors. A rapid cooling seen here is a strong signal that a thunderstorm is intensifying.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Asia Sector - CTBT</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ctbt.jpg" alt="Asia CTBT" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="The big picture. Track large-scale weather systems like monsoon depressions or cyclonic circulations across the globe. See how international weather patterns might affect India in the coming days.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Global - Infrared</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_ir1.jpg" alt="Globe IR1" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="A daytime snapshot of Earth. Watch the sunrise and sunset across the globe and see a true-color view of major weather systems affecting different continents.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Global - Visible</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_vis.jpg" alt="Globe VIS" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="Follow the atmospheric rivers. This global view tracks moisture flows across the planet, showing the large-scale patterns that influence the Indian monsoon and other major weather events.">
+                        <div class="p-3 border-b border-gray-100">
+                            <h3 class="text-sm font-semibold text-gray-800">Global - Water Vapour</h3>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_wv.jpg" alt="Globe WV" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="See the weather system's life cycle. This loop shows clouds and storms developing and moving over the past few hours. Track the progression of large cloud masses across the Indian subcontinent.">
+                        <div class="p-3 border-b border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-sm font-semibold text-gray-800">Infrared (Animated)</h3>
+                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/IR1.gif" alt="IR1 Animated" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="Watch the afternoon clouds build. This daytime loop is perfect for seeing cumulus clouds bubble up into thunderstorms, or for watching fog burn off in the morning across the region.">
+                        <div class="p-3 border-b border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-sm font-semibold text-gray-800">Visible (Animated)</h3>
+                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/VIS.gif" alt="VIS Animated" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="See the moisture flow. This animation reveals the movement of atmospheric moisture, showing how the 'fuel' for rain and storms is being transported over Central India.">
+                        <div class="p-3 border-b border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-sm font-semibold text-gray-800">Water Vapour (Animated)</h3>
+                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/WV.gif" alt="WV Animated" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
+                    <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
+                        title="Track storm intensity over time. This loop is critical for seeing which storms are growing stronger (indicated by cooling tops) and which are weakening, helping to forecast severe weather threats.">
+                        <div class="p-3 border-b border-gray-100">
+                            <div class="flex items-center gap-2">
+                                <h3 class="text-sm font-semibold text-gray-800">CTBT (Animated)</h3>
+                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                            </div>
+                        </div>
+                        <div class="bg-gray-100">
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/CTBT.gif" alt="CTBT Animated" class="w-full h-auto"
+                                onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
+                        </div>
+                    </div>
+
                 </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="A real-life photo from space. This shows you exactly what the cloud cover over Nagpur and the surrounding region looks like right now. Perfect for seeing the texture and spread of daytime clouds.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Asia Sector - Visible</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_vis.jpg"
-                            alt="Satellite - Asia VIS" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="The atmosphere's moisture map. Bright white areas show deep moisture, the fuel for thunderstorms. Dark areas are dry air. Use this to see if more moisture is flowing into the region, potentially fueling more rain.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Asia Sector - Water Vapour</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_wv.jpg"
-                            alt="Satellite - Asia WV" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="Pinpoints the strongest storms. This highlights the coldest (and therefore highest) cloud tops with vibrant colors. A rapid cooling seen here is a strong signal that a thunderstorm is intensifying.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Asia Sector - Cloud Top Brightness Temperature
-                            (CTBT)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ctbt.jpg"
-                            alt="Satellite - Asia CTBT" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="The big picture. Track large-scale weather systems like monsoon depressions or cyclonic circulations across the globe. See how international weather patterns might affect India in the coming days.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Global - Infrared</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Satellite/3Dglobe_ir1.jpg"
-                            alt="Satellite - Globe IR1" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="A daytime snapshot of Earth. Watch the sunrise and sunset across the globe and see a true-color view of major weather systems affecting different continents.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Global - Visible</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Satellite/3Dglobe_vis.jpg"
-                            alt="Satellite - Globe VIS" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="Follow the atmospheric rivers. This global view tracks moisture flows across the planet, showing the large-scale patterns that influence the Indian monsoon and other major weather events.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Global - Water Vapour</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Satellite/3Dglobe_wv.jpg"
-                            alt="Satellite - Globe WV" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <!-- Animated Satellite GIFs -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="See the weather system's life cycle. This loop shows clouds and storms developing and moving over the past few hours. Track the progression of large cloud masses across the Indian subcontinent.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Infrared (Animated)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Satellite/Converted/IR1.gif"
-                            alt="Satellite - IR1 Animated" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="Watch the afternoon clouds build. This daytime loop is perfect for seeing cumulus clouds bubble up into thunderstorms, or for watching fog burn off in the morning across the region.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Visible (Animated)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Satellite/Converted/VIS.gif"
-                            alt="Satellite - VIS Animated" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="See the moisture flow. This animation reveals the movement of atmospheric moisture, showing how the 'fuel' for rain and storms is being transported over Central India.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Water Vapour (Animated)</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Satellite/Converted/WV.gif"
-                            alt="Satellite - WV Animated" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow duration-300 cursor-pointer"
-                    title="Track storm intensity over time. This loop is critical for seeing which storms are growing stronger (indicated by cooling tops) and which are weakening, helping to forecast severe weather threats.">
-                    <div class="p-4">
-                        <h3 class="text-lg font-semibold text-gray-700">Cloud Top Brightness Temperature</h3>
-                    </div>
-                    <div class="bg-gray-200"><img src="https://mausam.imd.gov.in/Satellite/Converted/CTBT.gif"
-                            alt="Satellite - CTBT Animated" class="w-full h-auto"
-                            onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
-                    </div>
-                </div>
-            </div>
+            </section>
         </main>
 
         <!-- Footer -->
-        <footer class="text-center mt-10">
-            <p class="text-gray-500 text-sm">Data source: <a href="https://mausam.imd.gov.in/" target="_blank"
-                    class="text-blue-500 hover:underline">India Meteorological Department (IMD)</a></p>
+        <footer class="max-w-7xl mx-auto mt-8 mb-6">
+            <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-200 text-center">
+                <p class="text-sm text-gray-600">Data Source: 
+                    <a href="https://mausam.imd.gov.in/" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium underline">
+                        India Meteorological Department (IMD)
+                    </a>
+                </p>
+            </div>
         </footer>
     </div>
 
-    <!-- Modal for full-size image view -->
-    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center p-4 z-50">
-        <div class="relative bg-white p-4 rounded-lg max-w-4xl max-h-[90vh] w-full flex flex-col shadow-2xl">
-            <!-- Top Bar: Title and Close Button -->
-            <div class="flex justify-between items-center mb-2 pb-2 border-b">
-                <h3 id="modalTitle" class="text-xl font-bold text-gray-800"></h3>
-                <button id="closeModal" class="text-gray-600 hover:text-gray-900">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                        stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M6 18L18 6M6 6l12 12" />
+    <!-- Modal -->
+    <div id="imageModal" class="fixed inset-0 bg-black bg-opacity-80 hidden items-center justify-center z-50 p-4">
+        <div class="relative bg-white rounded-lg w-full max-w-6xl h-[90vh] flex flex-col shadow-2xl">
+            <!-- Header -->
+            <div class="flex justify-between items-start p-4 border-b border-gray-200 flex-shrink-0">
+                <div class="flex-1">
+                    <h3 id="modalTitle" class="text-lg font-semibold text-gray-900"></h3>
+                </div>
+                <button id="closeModal" class="ml-4 text-gray-400 hover:text-gray-600 transition-colors">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
 
-            <!-- Image container for zoom -->
-            <div id="modalImageContainer">
-                <img id="modalImage" src="" alt="Full-size radar image" class="rounded">
+            <!-- Image Container -->
+            <div id="modalImageContainer" class="flex-1 flex items-center justify-center p-4">
+                <img id="modalImage" src="" alt="Full-size image">
+                <div id="zoomHint" class="absolute top-4 right-4 bg-black bg-opacity-70 text-white px-3 py-2 rounded-md text-sm flex items-center gap-2 pointer-events-none">
+                    <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                    </svg>
+                    Click to zoom
+                </div>
             </div>
 
-            <!-- Bottom Bar: Description -->
-            <div class="mt-2 pt-2 border-t">
-                <p id="modalDescription" class="text-sm text-gray-700 text-center"></p>
+            <!-- Footer -->
+            <div class="p-4 border-t border-gray-200 flex-shrink-0">
+                <p id="modalDescription" class="text-sm text-gray-600"></p>
             </div>
 
-            <!-- Navigation Buttons -->
+            <!-- Navigation -->
             <button id="prevButton"
-                class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-white rounded-full p-2 text-black shadow-lg hover:bg-gray-200 transition-colors z-20">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
+                class="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 bg-white rounded-full p-3 shadow-lg hover:bg-gray-50 transition-colors">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
                 </svg>
             </button>
             <button id="nextButton"
-                class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-white rounded-full p-2 text-black shadow-lg hover:bg-gray-200 transition-colors z-20">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor">
+                class="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 bg-white rounded-full p-3 shadow-lg hover:bg-gray-50 transition-colors">
+                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
                 </svg>
             </button>
@@ -322,18 +439,23 @@
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const imageModal = document.getElementById('imageModal');
+            const modalImageContainer = document.getElementById('modalImageContainer');
             const modalImage = document.getElementById('modalImage');
             const modalTitle = document.getElementById('modalTitle');
             const modalDescription = document.getElementById('modalDescription');
             const closeModal = document.getElementById('closeModal');
             const prevButton = document.getElementById('prevButton');
             const nextButton = document.getElementById('nextButton');
+            const zoomHint = document.getElementById('zoomHint');
             const imageCards = document.querySelectorAll('main .cursor-pointer');
 
             let imagesData = [];
             let currentIndex = 0;
+            let isZoomed = false;
+            let isDragging = false;
+            let startX, startY, scrollLeft, scrollTop;
 
-            // Collect all image data from the page
+            // Collect image data
             imageCards.forEach((card, index) => {
                 const img = card.querySelector('img');
                 const title = card.querySelector('h3').innerText;
@@ -344,50 +466,109 @@
 
                 card.addEventListener('click', () => {
                     currentIndex = index;
-                    updateModalContent(currentIndex);
-                    imageModal.classList.remove('hidden');
-                    imageModal.classList.add('flex');
+                    openModal();
                 });
             });
 
-            const updateModalContent = (index) => {
-                const data = imagesData[index];
+            const openModal = () => {
+                updateModalContent();
+                imageModal.classList.remove('hidden');
+                imageModal.classList.add('flex');
+            };
+
+            const updateModalContent = () => {
+                const data = imagesData[currentIndex];
                 modalImage.src = data.src;
                 modalTitle.textContent = data.title;
                 modalDescription.textContent = data.description;
-                modalImage.classList.remove('zoomed');
 
-                // Show/hide navigation buttons
-                prevButton.style.display = index === 0 ? 'none' : 'block';
-                nextButton.style.display = index === imagesData.length - 1 ? 'none' : 'block';
+                // Reset zoom state
+                isZoomed = false;
+                modalImageContainer.classList.remove('zoomed');
+                modalImage.style.transform = '';
+                zoomHint.style.display = 'flex';
+
+                prevButton.style.display = currentIndex === 0 ? 'none' : 'block';
+                nextButton.style.display = currentIndex === imagesData.length - 1 ? 'none' : 'block';
             };
-
-            // Add zoom functionality on image click inside the modal
-            modalImage.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevents modal from closing when clicking image
-                modalImage.classList.toggle('zoomed');
-            });
 
             const hideModal = () => {
                 imageModal.classList.add('hidden');
                 imageModal.classList.remove('flex');
-                modalImage.src = ''; // Stop GIF from loading/playing in background
-                modalImage.classList.remove('zoomed'); // Reset zoom state on close
+                modalImage.src = '';
+                isZoomed = false;
+                modalImageContainer.classList.remove('zoomed');
+                modalImage.style.transform = '';
             };
 
-            closeModal.addEventListener('click', hideModal);
-            imageModal.addEventListener('click', (e) => {
-                if (e.target === imageModal) {
-                    hideModal();
+            // Zoom functionality
+            modalImageContainer.addEventListener('click', (e) => {
+                if (e.target === modalImage || e.target === modalImageContainer) {
+                    if (!isZoomed) {
+                        // Zoom in
+                        isZoomed = true;
+                        modalImageContainer.classList.add('zoomed');
+                        modalImage.style.transform = 'scale(2)';
+                        zoomHint.style.display = 'none';
+                        
+                        // Scroll to click position
+                        const rect = modalImageContainer.getBoundingClientRect();
+                        const x = e.clientX - rect.left;
+                        const y = e.clientY - rect.top;
+                        
+                        modalImageContainer.scrollLeft = (x * 2) - rect.width / 2;
+                        modalImageContainer.scrollTop = (y * 2) - rect.height / 2;
+                    } else {
+                        // Zoom out
+                        isZoomed = false;
+                        modalImageContainer.classList.remove('zoomed');
+                        modalImage.style.transform = '';
+                        zoomHint.style.display = 'flex';
+                        modalImageContainer.scrollLeft = 0;
+                        modalImageContainer.scrollTop = 0;
+                    }
                 }
             });
 
-            // Navigation logic
+            // Pan functionality when zoomed
+            modalImageContainer.addEventListener('mousedown', (e) => {
+                if (!isZoomed) return;
+                isDragging = true;
+                startX = e.pageX - modalImageContainer.offsetLeft;
+                startY = e.pageY - modalImageContainer.offsetTop;
+                scrollLeft = modalImageContainer.scrollLeft;
+                scrollTop = modalImageContainer.scrollTop;
+            });
+
+            modalImageContainer.addEventListener('mouseleave', () => {
+                isDragging = false;
+            });
+
+            modalImageContainer.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            modalImageContainer.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                e.preventDefault();
+                const x = e.pageX - modalImageContainer.offsetLeft;
+                const y = e.pageY - modalImageContainer.offsetTop;
+                const walkX = (x - startX) * 2;
+                const walkY = (y - startY) * 2;
+                modalImageContainer.scrollLeft = scrollLeft - walkX;
+                modalImageContainer.scrollTop = scrollTop - walkY;
+            });
+
+            closeModal.addEventListener('click', hideModal);
+            imageModal.addEventListener('click', (e) => {
+                if (e.target === imageModal) hideModal();
+            });
+
             prevButton.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (currentIndex > 0) {
                     currentIndex--;
-                    updateModalContent(currentIndex);
+                    updateModalContent();
                 }
             });
 
@@ -395,30 +576,43 @@
                 e.stopPropagation();
                 if (currentIndex < imagesData.length - 1) {
                     currentIndex++;
-                    updateModalContent(currentIndex);
+                    updateModalContent();
                 }
             });
 
-            // Timestamp logic
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (!imageModal.classList.contains('flex')) return;
+                
+                if (e.key === 'Escape') hideModal();
+                if (e.key === 'ArrowLeft' && currentIndex > 0) {
+                    currentIndex--;
+                    updateModalContent();
+                }
+                if (e.key === 'ArrowRight' && currentIndex < imagesData.length - 1) {
+                    currentIndex++;
+                    updateModalContent();
+                }
+            });
+
+            // Timestamp
             const timestampEl = document.getElementById('timestamp');
             const updateTimestamp = () => {
                 const now = new Date();
                 const options = {
-                    weekday: 'long',
                     year: 'numeric',
-                    month: 'long',
+                    month: 'short',
                     day: 'numeric',
                     hour: '2-digit',
                     minute: '2-digit',
                     timeZone: 'Asia/Kolkata',
                     hour12: true
                 };
-                const formattedDate = new Intl.DateTimeFormat('en-IN', options).format(now);
-                timestampEl.textContent = `Page Last Refreshed: ${formattedDate} IST`;
+                timestampEl.textContent = new Intl.DateTimeFormat('en-IN', options).format(now) + ' IST';
             };
 
-            updateTimestamp(); // Set initial time
-            setInterval(updateTimestamp, 60000); // Update every 60 seconds
+            updateTimestamp();
+            setInterval(updateTimestamp, 60000);
         });
     </script>
 </body>
