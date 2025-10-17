@@ -14,7 +14,8 @@
 
         .card {
             transition: all 0.2s ease;
-            will-change: transform, box-shadow; /* Optimization for animations */
+            will-change: transform, box-shadow;
+            /* Optimization for animations */
         }
 
         .card:hover {
@@ -41,7 +42,8 @@
 
         #modalImageContainer.zoomed {
             cursor: crosshair;
-            overflow: hidden; /* Changed from auto to hidden for smooth mouse pan */
+            overflow: hidden;
+            /* Changed from auto to hidden for smooth mouse pan */
         }
 
         #modalImage {
@@ -53,8 +55,10 @@
             margin: auto;
             object-fit: contain;
             transition: transform 0.2s ease;
-            pointer-events: none; /* Prevent image from capturing mouse events */
-            will-change: transform; /* Optimization for panning */
+            pointer-events: none;
+            /* Prevent image from capturing mouse events */
+            will-change: transform;
+            /* Optimization for panning */
         }
 
         #modalImageContainer.zoomed #modalImage {
@@ -100,16 +104,19 @@
                     <div class="flex flex-col items-start md:items-end gap-2">
                         <div class="flex items-center gap-2">
                             <span class="flex h-2 w-2 relative">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                <span
+                                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
                                 <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
                             </span>
                             <span class="text-sm font-medium text-green-600">Live</span>
                         </div>
                         <p id="timestamp" class="text-sm text-gray-500"></p>
-                        <button onclick="location.reload()" 
+                        <button onclick="location.reload()"
                             class="text-sm px-4 py-1.5 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                                stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
                             </svg>
                             Refresh
                         </button>
@@ -121,16 +128,18 @@
         <main class="max-w-7xl mx-auto">
             <!-- Radar Section -->
             <section class="mb-10">
-                <h2 class="text-xl font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-300">Doppler Weather Radar</h2>
+                <h2 class="text-xl font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-300">Doppler Weather Radar
+                </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    
+
                     <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
                         title="Your best all-in-one view. See exactly where it's raining around Nagpur right now and how heavy it is. Yellows and reds mean heavier rain, perfect for checking if that dark cloud overhead is going to be a downpour.">
                         <div class="p-3 border-b border-gray-100">
                             <h3 class="text-sm font-semibold text-gray-800">Combined Azimuth Range (CAZ)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/caz_ngp.gif" alt="CAZ" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Radar/caz_ngp.gif" alt="CAZ" class="w-full h-auto"
+                                loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -141,7 +150,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Plan Position Indicator (PPI)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/ppi_ngp.gif" alt="PPI" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Radar/ppi_ngp.gif" alt="PPI" class="w-full h-auto"
+                                loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -152,7 +162,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Surface Rainfall Intensity (SRI)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/sri_ngp.gif" alt="SRI" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Radar/sri_ngp.gif" alt="SRI" class="w-full h-auto"
+                                loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -163,7 +174,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Reflectivity (PPZ)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/ppz_ngp.gif" alt="PPZ" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Radar/ppz_ngp.gif" alt="PPZ" class="w-full h-auto"
+                                loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -174,7 +186,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Precipitation Accumulation (PAC)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/pac_ngp.gif" alt="PAC" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Radar/pac_ngp.gif" alt="PAC" class="w-full h-auto"
+                                loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -185,7 +198,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Doppler Velocity (PPV)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/ppv_ngp.gif" alt="PPV" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Radar/ppv_ngp.gif" alt="PPV" class="w-full h-auto"
+                                loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -196,7 +210,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Volume-Velocity Processing (VP2)</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/vp2_ngp.gif" alt="VP2" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Radar/vp2_ngp.gif" alt="VP2" class="w-full h-auto"
+                                loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -206,11 +221,13 @@
                         <div class="p-3 border-b border-gray-100">
                             <div class="flex items-center gap-2">
                                 <h3 class="text-sm font-semibold text-gray-800">Surface Rainfall (Animated)</h3>
-                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                                <span
+                                    class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_SRI.gif" alt="SRI Animated" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_SRI.gif"
+                                alt="SRI Animated" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -220,11 +237,13 @@
                         <div class="p-3 border-b border-gray-100">
                             <div class="flex items-center gap-2">
                                 <h3 class="text-sm font-semibold text-gray-800">Max Reflectivity (Animated)</h3>
-                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                                <span
+                                    class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_MAXZ.gif" alt="MAXZ Animated" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Radar/animation/Converted/NGP_MAXZ.gif"
+                                alt="MAXZ Animated" class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -234,16 +253,18 @@
 
             <!-- Satellite Section -->
             <section class="mb-10">
-                <h2 class="text-xl font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-300">Satellite Imagery</h2>
+                <h2 class="text-xl font-semibold text-gray-900 mb-4 pb-2 border-b border-gray-300">Satellite Imagery
+                </h2>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                    
+
                     <div class="card bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200 cursor-pointer"
                         title="See clouds day and night. This measures cloud top temperature. The bright white and colored tops over Central India represent taller, colder clouds, often associated with powerful afternoon thunderstorms.">
                         <div class="p-3 border-b border-gray-100">
                             <h3 class="text-sm font-semibold text-gray-800">Asia Sector - Infrared</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ir1.jpg" alt="Asia IR1" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ir1.jpg" alt="Asia IR1"
+                                class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -254,7 +275,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Asia Sector - Visible</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_vis.jpg" alt="Asia VIS" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_vis.jpg" alt="Asia VIS"
+                                class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -265,7 +287,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Asia Sector - Water Vapour</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_wv.jpg" alt="Asia WV" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_wv.jpg" alt="Asia WV"
+                                class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -276,7 +299,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Asia Sector - CTBT</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ctbt.jpg" alt="Asia CTBT" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dasiasec_ctbt.jpg" alt="Asia CTBT"
+                                class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -287,7 +311,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Global - Infrared</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_ir1.jpg" alt="Globe IR1" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_ir1.jpg" alt="Globe IR1"
+                                class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -298,7 +323,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Global - Visible</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_vis.jpg" alt="Globe VIS" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_vis.jpg" alt="Globe VIS"
+                                class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -309,7 +335,8 @@
                             <h3 class="text-sm font-semibold text-gray-800">Global - Water Vapour</h3>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_wv.jpg" alt="Globe WV" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Satellite/3Dglobe_wv.jpg" alt="Globe WV"
+                                class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -319,11 +346,13 @@
                         <div class="p-3 border-b border-gray-100">
                             <div class="flex items-center gap-2">
                                 <h3 class="text-sm font-semibold text-gray-800">Infrared (Animated)</h3>
-                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                                <span
+                                    class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/Converted/IR1.gif" alt="IR1 Animated" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/IR1.gif" alt="IR1 Animated"
+                                class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -333,11 +362,13 @@
                         <div class="p-3 border-b border-gray-100">
                             <div class="flex items-center gap-2">
                                 <h3 class="text-sm font-semibold text-gray-800">Visible (Animated)</h3>
-                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                                <span
+                                    class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/Converted/VIS.gif" alt="VIS Animated" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/VIS.gif" alt="VIS Animated"
+                                class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -347,11 +378,13 @@
                         <div class="p-3 border-b border-gray-100">
                             <div class="flex items-center gap-2">
                                 <h3 class="text-sm font-semibold text-gray-800">Water Vapour (Animated)</h3>
-                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                                <span
+                                    class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/Converted/WV.gif" alt="WV Animated" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/WV.gif" alt="WV Animated"
+                                class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -361,11 +394,13 @@
                         <div class="p-3 border-b border-gray-100">
                             <div class="flex items-center gap-2">
                                 <h3 class="text-sm font-semibold text-gray-800">CTBT (Animated)</h3>
-                                <span class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
+                                <span
+                                    class="px-1.5 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded">GIF</span>
                             </div>
                         </div>
                         <div class="bg-gray-100">
-                            <img src="https://mausam.imd.gov.in/Satellite/Converted/CTBT.gif" alt="CTBT Animated" class="w-full h-auto" loading="lazy"
+                            <img src="https://mausam.imd.gov.in/Satellite/Converted/CTBT.gif" alt="CTBT Animated"
+                                class="w-full h-auto" loading="lazy"
                                 onerror="this.onerror=null;this.src='https://placehold.co/500x500/f3f4f6/9ca3af?text=Image+Not+Available';">
                         </div>
                     </div>
@@ -377,8 +412,9 @@
         <!-- Footer -->
         <footer class="max-w-7xl mx-auto mt-8 mb-6">
             <div class="bg-white rounded-lg shadow-sm p-4 border border-gray-200 text-center">
-                <p class="text-sm text-gray-600">Data Source: 
-                    <a href="https://mausam.imd.gov.in/" target="_blank" class="text-blue-600 hover:text-blue-700 font-medium underline">
+                <p class="text-sm text-gray-600">Data Source:
+                    <a href="https://mausam.imd.gov.in/" target="_blank"
+                        class="text-blue-600 hover:text-blue-700 font-medium underline">
                         India Meteorological Department (IMD)
                     </a>
                 </p>
@@ -396,7 +432,8 @@
                 </div>
                 <button id="closeModal" class="ml-4 text-gray-400 hover:text-gray-600 transition-colors">
                     <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -404,9 +441,11 @@
             <!-- Image Container -->
             <div id="modalImageContainer" class="flex-1 flex items-center justify-center p-4">
                 <img id="modalImage" src="" alt="Full-size image">
-                <div id="zoomHint" class="absolute top-4 right-4 bg-black bg-opacity-70 text-white px-3 py-2 rounded-md text-sm flex items-center gap-2 pointer-events-none">
+                <div id="zoomHint"
+                    class="absolute top-4 right-4 bg-black bg-opacity-70 text-white px-3 py-2 rounded-md text-sm flex items-center gap-2 pointer-events-none">
                     <svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v3m0 0v3m0-3h3m-3 0H7" />
                     </svg>
                     Click to zoom
                 </div>
@@ -449,7 +488,7 @@
             const modalHeader = document.getElementById('modalHeader');
             const modalFooter = document.getElementById('modalFooter');
             const timestampEl = document.getElementById('timestamp');
-            
+
             // --- State Variables ---
             let imagesData = [];
             let currentIndex = 0;
@@ -489,12 +528,12 @@
                 zoomHint.style.display = 'flex';
                 modalHeader.classList.remove('hidden');
                 modalFooter.classList.remove('hidden');
-                
+
                 // Toggle navigation button visibility
                 prevButton.style.display = currentIndex === 0 ? 'none' : 'block';
                 nextButton.style.display = currentIndex === imagesData.length - 1 ? 'none' : 'block';
             };
-            
+
             /**
              * Opens and displays the image modal.
              */
@@ -533,7 +572,7 @@
                     modalImage.style.transform = ''; // Reset transform on zoom out
                 }
             };
-            
+
             /**
              * Pans the image inside the container based on mouse position.
              * @param {MouseEvent} e - The mouse event object.
@@ -543,10 +582,10 @@
 
                 const containerRect = modalImageContainer.getBoundingClientRect();
                 const panPadding = 40; // The amount of "overscroll" in pixels
-                
+
                 const zoomedWidth = imageFitWidth * zoomLevel;
                 const zoomedHeight = imageFitHeight * zoomLevel;
-                
+
                 // Calculate how much the zoomed image overflows the container
                 const overflowX = Math.max(0, zoomedWidth - containerRect.width);
                 const overflowY = Math.max(0, zoomedHeight - containerRect.height);
@@ -558,11 +597,11 @@
                 // Calculate the mouse position as a percentage of the container's dimensions.
                 const xPercent = Math.max(0, Math.min(1, mouseX / containerRect.width));
                 const yPercent = Math.max(0, Math.min(1, mouseY / containerRect.height));
-                
+
                 // Calculate the required translation, adding padding to create an "overscroll" effect.
                 const panX = -(xPercent - 0.5) * (overflowX + panPadding * 2);
                 const panY = -(yPercent - 0.5) * (overflowY + panPadding * 2);
-                
+
                 // Apply the transform. The translation is applied directly in screen pixels after the scaling.
                 modalImage.style.transform = `scale(${zoomLevel}) translate(${panX}px, ${panY}px)`;
             };
@@ -609,7 +648,7 @@
             modalImageContainer.addEventListener('click', (e) => {
                 if (e.target === modalImageContainer) toggleZoom(e);
             });
-            
+
             modalImageContainer.addEventListener('mousemove', panImage);
 
             closeModal.addEventListener('click', hideModal);
@@ -629,12 +668,12 @@
 
             document.addEventListener('keydown', (e) => {
                 if (imageModal.classList.contains('hidden')) return;
-                
+
                 if (e.key === 'Escape') hideModal();
                 if (e.key === 'ArrowLeft') navigate(-1);
                 if (e.key === 'ArrowRight') navigate(1);
             });
-            
+
             // --- Initialization ---
             collectImageData();
             updateTimestamp();
@@ -644,4 +683,3 @@
 </body>
 
 </html>
-
