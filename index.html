@@ -1,51 +1,82 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nagpur Weather Radar & Satellite</title>
-    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%2367E8F9' d='M75.9,53.3c-2.3-11.2-12.8-19.8-24.8-19.8c-1.5,0-3,0.2-4.4,0.5C41.2,23.3,31.3,16.5,19.6,16.5c-12,0-21.8,9.8-21.8,21.8c0,1.9,0.3,3.8,0.8,5.6C-3.8,49.1-12,59.3-12,71.3c0,13.1,10.7,23.8,23.8,23.8h63.5c10.3,0,18.8-8.4,18.8-18.8C94.1,64.2,86.2,55.6,75.9,53.3z' transform='translate(13,-5)'/%3E%3Cpath fill='%23FBBF24' d='M50,10a20 20 0 1 1 0,40a20 20 0 0 1 0-40z' transform='scale(0.8) translate(-40,-5)'/%3E%3C/svg%3E">
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%2367E8F9' d='M75.9,53.3c-2.3-11.2-12.8-19.8-24.8-19.8c-1.5,0-3,0.2-4.4,0.5C41.2,23.3,31.3,16.5,19.6,16.5c-12,0-21.8,9.8-21.8,21.8c0,1.9,0.3,3.8,0.8,5.6C-3.8,49.1-12,59.3-12,71.3c0,13.1,10.7,23.8,23.8,23.8h63.5c10.3,0,18.8-8.4,18.8-18.8C94.1,64.2,86.2,55.6,75.9,53.3z' transform='translate(13,-5)'/%3E%3Cpath fill='%23FBBF24' d='M50,10a20 20 0 1 1 0,40a20 20 0 0 1 0-40z' transform='scale(0.8) translate(-40,-5)'/%3E%3C/svg%3E">
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* slate-900 */
+            background-color: #0f172a;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
+
         .card {
             transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
             animation: fadeIn 0.5s ease-out forwards;
             opacity: 0;
         }
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: #3b82f6; /* blue-500 */
-            box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.25);
+
+        /* Enhanced hover for desktop only */
+        @media (hover: hover) and (pointer: fine) {
+            .card:hover {
+                transform: translateY(-4px);
+                border-color: #3b82f6;
+                box-shadow: 0 0 25px -5px rgba(59, 130, 246, 0.25);
+            }
+        }
+
+        /* Touch feedback for mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .card:active {
+                transform: scale(0.98);
+                border-color: #3b82f6;
+            }
         }
 
         /* Modal Image Zoom and Pan Styles */
         #imgContainer {
             overflow: hidden;
             flex-grow: 1;
-            background: #1e293b; /* slate-800 */
-            cursor: zoom-in;
+            background: #1e293b;
             border-radius: 0.5rem;
+            touch-action: manipulation;
         }
-        #imgContainer.zoomed {
-            cursor: crosshair;
-            overflow: hidden;
+
+        /* Desktop only zoom cursor */
+        @media (min-width: 1024px) {
+            #imgContainer {
+                cursor: zoom-in;
+            }
+
+            #imgContainer.zoomed {
+                cursor: grab;
+                overflow: hidden;
+            }
+
+            #imgContainer.zoomed:active {
+                cursor: grabbing;
+            }
         }
+
         #modalImg {
             max-width: 100%;
             max-height: 100%;
             display: block;
             margin: auto;
             object-fit: contain;
-            transition: transform 0.05s linear;
             pointer-events: none;
             will-change: transform;
+            transition: transform 0.1s ease-out;
         }
+
         #imgContainer.zoomed #modalImg {
             max-width: none;
             max-height: none;
@@ -53,46 +84,82 @@
 
         /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
+
         @keyframes pulse {
-            50% { opacity: .5; }
+            50% {
+                opacity: .5;
+            }
         }
+
         .img-placeholder-pulse {
             animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
+
+        /* Improved touch targets for mobile */
+        @media (max-width: 640px) {
+
+            button,
+            select {
+                min-height: 44px;
+                min-width: 44px;
+            }
+        }
+
+        /* Prevent zoom on double tap for iOS */
+        * {
+            touch-action: manipulation;
+        }
     </style>
 </head>
-<body class="bg-slate-900 text-slate-300">
-    <div class="min-h-screen px-4 py-6">
-        <!-- Header -->
-        <header class="max-w-7xl mx-auto mb-8">
-            <div class="bg-slate-800/60 backdrop-blur-lg rounded-xl shadow-lg p-6 border border-slate-700">
-                <div class="flex flex-col items-center text-center w-full">
-                    <!-- Big Text Title -->
-                    <div class="flex items-center mb-4">
 
-                        <h1 class="text-3xl sm:text-4xl font-bold text-slate-100 tracking-tight">IMD Doppler Radar & Satellite Imagery</h1>
+<body class="bg-slate-900 text-slate-300">
+    <div class="min-h-screen px-3 py-4 sm:px-4 md:px-6 lg:px-8">
+        <!-- Header -->
+        <header class="max-w-7xl mx-auto mb-6 sm:mb-8">
+            <div
+                class="bg-slate-800/60 backdrop-blur-lg rounded-xl shadow-lg p-3 sm:p-4 md:p-6 border border-slate-700">
+                <div class="flex flex-col items-center text-center w-full">
+                    <!-- Title -->
+                    <div class="flex items-center mb-3 sm:mb-4">
+                        <h1
+                            class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-100 tracking-tight px-2">
+                            IMD Doppler Radar & Satellite
+                        </h1>
                     </div>
 
-                    <!-- Controls below the title -->
-                    <div class="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-8 w-full pt-4 border-t border-slate-700 mt-2">
+                    <!-- Controls -->
+                    <div
+                        class="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 sm:gap-4 md:gap-8 w-full pt-3 sm:pt-4 border-t border-slate-700 mt-2">
                         <!-- Station Dropdown -->
-                        <div class="flex items-center gap-3 w-full max-w-xs">
-                            <label for="stationSelect" class="text-sm font-medium text-slate-400">Station:</label>
-                            <select id="stationSelect" class="flex-grow bg-slate-700 border border-slate-600 text-slate-200 rounded-lg text-sm p-1.5 focus:ring-blue-500 focus:border-blue-500"></select>
+                        <div class="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+                            <label for="stationSelect"
+                                class="text-xs sm:text-sm font-medium text-slate-400 whitespace-nowrap">Station:</label>
+                            <select id="stationSelect"
+                                class="flex-grow sm:flex-grow-0 bg-slate-700 border border-slate-600 text-slate-200 rounded-lg text-sm p-2 sm:p-1.5 focus:ring-blue-500 focus:border-blue-500 min-w-0 sm:min-w-[200px]">
+                            </select>
                         </div>
                         <!-- Live Status & Timestamp -->
-                        <div class="flex items-center gap-3 text-sm text-slate-400">
-                             <div class="flex items-center gap-1.5">
-                                 <span class="flex h-2 w-2 relative">
-                                     <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                                     <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-                                 </span>
-                                 <span class="font-medium text-green-400">Live</span>
-                             </div>
-                            <span id="timestamp"></span>
+                        <div
+                            class="flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-slate-400 flex-wrap">
+                            <div class="flex items-center gap-1.5">
+                                <span class="flex h-2 w-2 relative">
+                                    <span
+                                        class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
+                                </span>
+                                <span class="font-medium text-green-400">Live</span>
+                            </div>
+                            <span id="timestamp" class="text-center"></span>
                         </div>
                     </div>
                 </div>
@@ -101,58 +168,94 @@
 
         <main class="max-w-7xl mx-auto">
             <!-- Radar Section -->
-            <section class="mb-12">
-                <h2 class="text-2xl font-semibold mb-4 pb-2 border-b border-slate-700 text-slate-200">Doppler Weather Radar</h2>
-                <div id="radarGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+            <section class="mb-8 sm:mb-10 md:mb-12">
+                <h2
+                    class="text-lg sm:text-xl md:text-2xl font-semibold mb-3 sm:mb-4 pb-2 border-b border-slate-700 text-slate-200">
+                    Doppler Weather Radar
+                </h2>
+                <div id="radarGrid"
+                    class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5"></div>
             </section>
 
             <!-- Satellite Section -->
-            <section class="mb-10">
-                <h2 class="text-2xl font-semibold mb-4 pb-2 border-b border-slate-700 text-slate-200">Satellite Imagery</h2>
-                <div id="satelliteGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5"></div>
+            <section class="mb-8 sm:mb-10">
+                <h2
+                    class="text-lg sm:text-xl md:text-2xl font-semibold mb-3 sm:mb-4 pb-2 border-b border-slate-700 text-slate-200">
+                    Satellite Imagery
+                </h2>
+                <div id="satelliteGrid"
+                    class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5"></div>
             </section>
         </main>
 
-        <footer class="max-w-7xl mx-auto mt-8 mb-6">
-            <div class="text-center p-4">
-                <p class="text-sm text-slate-500">Data Source:
-                    <a href="https://mausam.imd.gov.in/" target="_blank" class="text-blue-400 hover:text-blue-300 font-medium underline">India Meteorological Department (IMD)</a>
+        <footer class="max-w-7xl mx-auto mt-6 sm:mt-8 mb-4 sm:mb-6">
+            <div class="text-center p-3 sm:p-4">
+                <p class="text-xs sm:text-sm text-slate-500">
+                    Data Source:
+                    <a href="https://mausam.imd.gov.in/" target="_blank" rel="noopener noreferrer"
+                        class="text-blue-400 hover:text-blue-300 font-medium underline">
+                        India Meteorological Department (IMD)
+                    </a>
                 </p>
             </div>
         </footer>
     </div>
 
     <!-- Modal -->
-    <div id="modal" class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
-        <div class="relative bg-slate-800 rounded-lg w-full max-w-6xl h-[90vh] flex flex-col shadow-2xl border border-slate-700">
-            <div id="modalHeader" class="flex justify-between items-start p-4 border-b border-slate-700">
-                <h3 id="modalTitle" class="text-lg font-semibold text-slate-100 flex-grow text-center"></h3>
-                <button id="closeBtn" class="ml-4 text-slate-400 hover:text-slate-200" aria-label="Close image viewer">
-                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+    <div id="modal"
+        class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm hidden items-center justify-center z-50 p-2 sm:p-4">
+        <div
+            class="relative bg-slate-800 rounded-lg w-full max-w-[95vw] sm:max-w-6xl h-[90vh] sm:h-[85vh] md:h-[90vh] flex flex-col shadow-2xl border border-slate-700">
+            <!-- Modal Header -->
+            <div id="modalHeader"
+                class="flex justify-between items-center p-2 sm:p-3 md:p-4 border-b border-slate-700 flex-shrink-0">
+                <h3 id="modalTitle"
+                    class="text-sm sm:text-base md:text-lg font-semibold text-slate-100 flex-grow text-center pr-8 sm:pr-6">
+                </h3>
+                <button id="closeBtn" class="text-slate-400 hover:text-slate-200 flex-shrink-0 p-2 -mr-2"
+                    aria-label="Close image viewer">
+                    <svg class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
-            <div id="imgContainer" class="flex-1 flex items-center justify-center p-2 sm:p-4 relative">
-                <div id="modalSpinner" class="hidden absolute inset-0 items-center justify-center">
-                    <svg class="animate-spin h-10 w-10 text-slate-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            <!-- Image Container -->
+            <div id="imgContainer"
+                class="flex-1 flex items-center justify-center p-2 sm:p-3 md:p-4 relative min-h-0 overflow-hidden">
+                <div id="modalSpinner" class="hidden absolute inset-0 items-center justify-center z-10">
+                    <svg class="animate-spin h-8 w-8 sm:h-10 sm:w-10 text-slate-400" xmlns="http://www.w3.org/2000/svg"
+                        fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4">
+                        </circle>
+                        <path class="opacity-75" fill="currentColor"
+                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                        </path>
                     </svg>
                 </div>
-                <div id="modalPlaceholder" class="w-full h-full hidden items-center justify-center text-center">
-                    <p id="modalPlaceholderText" class="text-slate-400"></p>
+                <div id="modalPlaceholder" class="w-full h-full hidden items-center justify-center text-center p-4">
+                    <p id="modalPlaceholderText" class="text-slate-400 text-sm sm:text-base"></p>
                 </div>
-                <img id="modalImg" src="" alt="">
+                <img id="modalImg" src="" alt="" class="max-w-full max-h-full">
             </div>
-            <div id="modalFooter" class="p-4 border-t border-slate-700">
-                <p id="modalDesc" class="text-sm text-slate-400 text-center"></p>
+            <!-- Modal Footer -->
+            <div id="modalFooter" class="p-2 sm:p-3 md:p-4 border-t border-slate-700 flex-shrink-0">
+                <p id="modalDesc" class="text-xs sm:text-sm text-slate-400 text-center leading-relaxed"></p>
             </div>
-            <button id="prevBtn" class="absolute left-2 top-1/2 -translate-y-1/2 bg-slate-700/50 rounded-full p-2 shadow-lg hover:bg-slate-600/70 backdrop-blur-sm" aria-label="Previous image">
-                <svg class="h-6 w-6 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" /></svg>
+            <!-- Navigation Buttons -->
+            <button id="prevBtn"
+                class="absolute left-1 sm:left-2 top-1/2 -translate-y-1/2 bg-slate-700/70 rounded-full p-2 sm:p-2.5 shadow-lg hover:bg-slate-600/90 backdrop-blur-sm transition-all active:scale-95"
+                aria-label="Previous image">
+                <svg class="h-5 w-5 sm:h-6 sm:w-6 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                </svg>
             </button>
-            <button id="nextBtn" class="absolute right-2 top-1/2 -translate-y-1/2 bg-slate-700/50 rounded-full p-2 shadow-lg hover:bg-slate-600/70 backdrop-blur-sm" aria-label="Next image">
-                 <svg class="h-6 w-6 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
+            <button id="nextBtn"
+                class="absolute right-1 sm:right-2 top-1/2 -translate-y-1/2 bg-slate-700/70 rounded-full p-2 sm:p-2.5 shadow-lg hover:bg-slate-600/90 backdrop-blur-sm transition-all active:scale-95"
+                aria-label="Next image">
+                <svg class="h-5 w-5 sm:h-6 sm:w-6 text-slate-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                </svg>
             </button>
         </div>
     </div>
@@ -175,29 +278,29 @@
             };
 
             const radarData = [
-                {title: 'Combined Azimuth Range (CAZ)', url: 'https://mausam.imd.gov.in/Radar/caz_{s}.gif', desc: 'Your best all-in-one view. See exactly where it\'s raining around your selected region right now and how heavy it is.'},
-                {title: 'Plan Position Indicator (PPI)', url: 'https://mausam.imd.gov.in/Radar/ppi_{s}.gif', desc: 'A classic top-down radar sweep, showing precipitation detected at a single, fixed angle.'},
-                {title: 'Surface Rainfall Intensity (SRI)', url: 'https://mausam.imd.gov.in/Radar/sri_{s}.gif', desc: 'How hard is it raining? Shows rainfall rate in mm/hr on the ground.'},
-                {title: 'Reflectivity (PPZ)', url: 'https://mausam.imd.gov.in/Radar/ppz_{s}.gif', desc: 'Measures the thickness of rain. Bright colors mean bigger raindrops or even hail.'},
-                {title: 'Precipitation Accumulation (PAC)', url: 'https://mausam.imd.gov.in/Radar/pac_{s}.gif', desc: 'Total rainfall over the last 24 hours. Vital for monitoring flooding risk.'},
-                {title: 'Doppler Velocity (PPV)', url: 'https://mausam.imd.gov.in/Radar/ppv_{s}.gif', desc: 'Shows speed and direction of rain relative to the radar. Green moves towards, red moves away.'},
-                {title: 'Volume-Velocity Processing (VP2)', url: 'https://mausam.imd.gov.in/Radar/vp2_{s}.gif', desc: 'A 3D wind map of the storm. Advanced view for analyzing wind structure.'},
-                {title: 'Surface Rainfall (Animated)', url: 'https://mausam.imd.gov.in/Radar/animation/Converted/{S}_SRI.gif', desc: 'Watch the rain move in real-time. See if rain is heading towards or away from you.', gif: true},
-                {title: 'Max Reflectivity (Animated)', url: 'https://mausam.imd.gov.in/Radar/animation/Converted/{S}_MAXZ.gif', desc: 'Tracks the storm\'s powerhouse, showing where the heaviest rain or hail is.', gif: true}
+                { title: 'Combined Azimuth Range (CAZ)', url: 'https://mausam.imd.gov.in/Radar/caz_{s}.gif', desc: 'Your best all-in-one view. See exactly where it\'s raining around your selected region right now and how heavy it is.' },
+                { title: 'Plan Position Indicator (PPI)', url: 'https://mausam.imd.gov.in/Radar/ppi_{s}.gif', desc: 'A classic top-down radar sweep, showing precipitation detected at a single, fixed angle.' },
+                { title: 'Surface Rainfall Intensity (SRI)', url: 'https://mausam.imd.gov.in/Radar/sri_{s}.gif', desc: 'How hard is it raining? Shows rainfall rate in mm/hr on the ground.' },
+                { title: 'Reflectivity (PPZ)', url: 'https://mausam.imd.gov.in/Radar/ppz_{s}.gif', desc: 'Measures the thickness of rain. Bright colors mean bigger raindrops or even hail.' },
+                { title: 'Precipitation Accumulation (PAC)', url: 'https://mausam.imd.gov.in/Radar/pac_{s}.gif', desc: 'Total rainfall over the last 24 hours. Vital for monitoring flooding risk.' },
+                { title: 'Doppler Velocity (PPV)', url: 'https://mausam.imd.gov.in/Radar/ppv_{s}.gif', desc: 'Shows speed and direction of rain relative to the radar. Green moves towards, red moves away.' },
+                { title: 'Volume-Velocity Processing (VP2)', url: 'https://mausam.imd.gov.in/Radar/vp2_{s}.gif', desc: 'A 3D wind map of the storm. Advanced view for analyzing wind structure.' },
+                { title: 'Surface Rainfall (Animated)', url: 'https://mausam.imd.gov.in/Radar/animation/Converted/{S}_SRI.gif', desc: 'Watch the rain move in real-time. See if rain is heading towards or away from you.', gif: true },
+                { title: 'Max Reflectivity (Animated)', url: 'https://mausam.imd.gov.in/Radar/animation/Converted/{S}_MAXZ.gif', desc: 'Tracks the storm\'s powerhouse, showing where the heaviest rain or hail is.', gif: true }
             ];
 
             const satelliteData = [
-                {title: 'Asia Sector - Infrared', url: 'https://mausam.imd.gov.in/Satellite/3Dasiasec_ir1.jpg', desc: 'See clouds day and night. Bright white tops represent taller, colder clouds.'},
-                {title: 'Asia Sector - Visible', url: 'https://mausam.imd.gov.in/Satellite/3Dasiasec_vis.jpg', desc: 'A real-life photo from space showing cloud cover right now.'},
-                {title: 'Asia Sector - Water Vapour', url: 'https://mausam.imd.gov.in/Satellite/3Dasiasec_wv.jpg', desc: 'The atmosphere\'s moisture map. Bright areas show deep moisture fueling thunderstorms.'},
-                {title: 'Asia Sector - CTBT', url: 'https://mausam.imd.gov.in/Satellite/3Dasiasec_ctbt.jpg', desc: 'Pinpoints the strongest storms with vibrant colors highlighting cold cloud tops.'},
-                {title: 'Global - Infrared', url: 'https://mausam.imd.gov.in/Satellite/3Dglobe_ir1.jpg', desc: 'The big picture. Track large-scale weather systems across the globe.'},
-                {title: 'Global - Visible', url: 'https://mausam.imd.gov.in/Satellite/3Dglobe_vis.jpg', desc: 'A daytime snapshot of Earth showing major weather systems.'},
-                {title: 'Global - Water Vapour', url: 'https://mausam.imd.gov.in/Satellite/3Dglobe_wv.jpg', desc: 'Global moisture flows that influence the Indian monsoon.'},
-                {title: 'Infrared (Animated)', url: 'https://mausam.imd.gov.in/Satellite/Converted/IR1.gif', desc: 'Watch clouds and storms develop and move over the past few hours.', gif: true},
-                {title: 'Visible (Animated)', url: 'https://mausam.imd.gov.in/Satellite/Converted/VIS.gif', desc: 'See cumulus clouds bubble up into thunderstorms during the day.', gif: true},
-                {title: 'Water Vapour (Animated)', url: 'https://mausam.imd.gov.in/Satellite/Converted/WV.gif', desc: 'See moisture flow and how fuel for storms is being transported.', gif: true},
-                {title: 'CTBT (Animated)', url: 'https://mausam.imd.gov.in/Satellite/Converted/CTBT.gif', desc: 'Track storm intensity over time. See which storms are growing stronger.', gif: true}
+                { title: 'Asia Sector - Infrared', url: 'https://mausam.imd.gov.in/Satellite/3Dasiasec_ir1.jpg', desc: 'See clouds day and night. Bright white tops represent taller, colder clouds.' },
+                { title: 'Asia Sector - Visible', url: 'https://mausam.imd.gov.in/Satellite/3Dasiasec_vis.jpg', desc: 'A real-life photo from space showing cloud cover right now.' },
+                { title: 'Asia Sector - Water Vapour', url: 'https://mausam.imd.gov.in/Satellite/3Dasiasec_wv.jpg', desc: 'The atmosphere\'s moisture map. Bright areas show deep moisture fueling thunderstorms.' },
+                { title: 'Asia Sector - CTBT', url: 'https://mausam.imd.gov.in/Satellite/3Dasiasec_ctbt.jpg', desc: 'Pinpoints the strongest storms with vibrant colors highlighting cold cloud tops.' },
+                { title: 'Global - Infrared', url: 'https://mausam.imd.gov.in/Satellite/3Dglobe_ir1.jpg', desc: 'The big picture. Track large-scale weather systems across the globe.' },
+                { title: 'Global - Visible', url: 'https://mausam.imd.gov.in/Satellite/3Dglobe_vis.jpg', desc: 'A daytime snapshot of Earth showing major weather systems.' },
+                { title: 'Global - Water Vapour', url: 'https://mausam.imd.gov.in/Satellite/3Dglobe_wv.jpg', desc: 'Global moisture flows that influence the Indian monsoon.' },
+                { title: 'Infrared (Animated)', url: 'https://mausam.imd.gov.in/Satellite/Converted/IR1.gif', desc: 'Watch clouds and storms develop and move over the past few hours.', gif: true },
+                { title: 'Visible (Animated)', url: 'https://mausam.imd.gov.in/Satellite/Converted/VIS.gif', desc: 'See cumulus clouds bubble up into thunderstorms during the day.', gif: true },
+                { title: 'Water Vapour (Animated)', url: 'https://mausam.imd.gov.in/Satellite/Converted/WV.gif', desc: 'See moisture flow and how fuel for storms is being transported.', gif: true },
+                { title: 'CTBT (Animated)', url: 'https://mausam.imd.gov.in/Satellite/Converted/CTBT.gif', desc: 'Track storm intensity over time. See which storms are growing stronger.', gif: true }
             ];
 
             const el = {
@@ -220,22 +323,44 @@
                 modalSpinner: document.getElementById('modalSpinner'),
             };
 
-            let state = {images: [], idx: 0, zoomed: false, w: 0, h: 0, zoomLevel: 2};
+            const SMOOTHING_FACTOR = 0.15;
+            let state = {
+                images: [],
+                idx: 0,
+                zoomed: false,
+                w: 0,
+                h: 0,
+                zoomLevel: 2,
+                rafId: null,
+                currentX: 0,
+                currentY: 0,
+                targetX: 0,
+                targetY: 0,
+                isDesktop: false
+            };
+
+            // Detect desktop device (screens 1024px and above)
+            const checkIsDesktop = () => {
+                state.isDesktop = window.matchMedia("(min-width: 1024px)").matches;
+            };
+
+            checkIsDesktop();
+            window.addEventListener('resize', checkIsDesktop);
 
             const createCard = (data, station, delay) => {
                 const url = data.url.replace('{s}', station.toLowerCase()).replace('{S}', station.toUpperCase());
                 return `<div class="card bg-slate-800 rounded-lg overflow-hidden border border-slate-700 cursor-pointer flex flex-col"
                              style="animation-delay: ${delay}ms;"
                              data-url="${url}" data-title="${data.title}" data-desc="${data.desc}">
-                        <div class="p-3 border-b border-slate-700 flex-shrink-0">
-                            <h3 class="text-sm font-semibold text-slate-200 flex items-center justify-center gap-2">
-                                ${data.title}
-                                ${data.gif ? '<span class="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 text-xs font-medium rounded">GIF</span>' : ''}
+                        <div class="p-2 sm:p-3 border-b border-slate-700 flex-shrink-0">
+                            <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center justify-center gap-2 text-center">
+                                <span class="line-clamp-2">${data.title}</span>
+                                ${data.gif ? '<span class="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 text-xs font-medium rounded-md flex-shrink-0">GIF</span>' : ''}
                             </h3>
                         </div>
                         <div class="bg-slate-900/50 flex items-center justify-center aspect-square text-slate-400 text-xs text-center p-2 relative">
                             <div class="absolute inset-0 bg-slate-700/50 img-placeholder-pulse"></div>
-                            <p class="absolute inset-0 hidden items-center justify-center text-center">Not<br>Available</p>
+                            <p class="absolute inset-0 hidden items-center justify-center text-center p-2">Image<br>Not Available</p>
                             <img src="${url}" alt="${data.title}" class="w-full h-full object-contain relative" loading="lazy"
                                  onload="this.previousElementSibling.previousElementSibling.style.display='none'"
                                  onerror="this.style.display='none'; this.previousElementSibling.style.display='flex'; this.previousElementSibling.previousElementSibling.style.display='none'">
@@ -294,14 +419,58 @@
                 el.nextBtn.style.display = idx === state.images.length - 1 ? 'none' : 'block';
                 el.modal.classList.remove('hidden');
                 el.modal.classList.add('flex');
+
+                // Prevent body scroll on mobile when modal is open
+                document.body.style.overflow = 'hidden';
             };
 
             const hideModal = () => {
+                if (state.rafId) {
+                    cancelAnimationFrame(state.rafId);
+                    state.rafId = null;
+                }
                 el.modal.classList.add('hidden');
                 el.modal.classList.remove('flex');
+                document.body.style.overflow = '';
+            };
+
+            const calculatePanValues = (clientX, clientY) => {
+                const r = el.imgContainer.getBoundingClientRect();
+                const zoom = state.zoomLevel, pad = 40;
+                const overX = Math.max(0, state.w * zoom - r.width);
+                const overY = Math.max(0, state.h * zoom - r.height);
+                const xPct = Math.max(0, Math.min(1, (clientX - r.left) / r.width));
+                const yPct = Math.max(0, Math.min(1, (clientY - r.top) / r.height));
+                const panX = -(xPct - 0.5) * (overX + pad * 2);
+                const panY = -(yPct - 0.5) * (overY + pad * 2);
+                return { panX, panY };
+            };
+
+            const animationLoop = () => {
+                if (!state.zoomed) {
+                    state.rafId = null;
+                    return;
+                }
+                const dx = state.targetX - state.currentX;
+                const dy = state.targetY - state.currentY;
+
+                if (Math.abs(dx) < 0.1 && Math.abs(dy) < 0.1) {
+                    state.currentX = state.targetX;
+                    state.currentY = state.targetY;
+                } else {
+                    state.currentX += dx * SMOOTHING_FACTOR;
+                    state.currentY += dy * SMOOTHING_FACTOR;
+                }
+
+                el.modalImg.style.transform = `scale(${state.zoomLevel}) translate(${state.currentX}px, ${state.currentY}px)`;
+                state.rafId = requestAnimationFrame(animationLoop);
             };
 
             const toggleZoom = (e) => {
+                // Only enable zoom on desktop screens
+                if (!state.isDesktop) return;
+                if (el.modalImg.classList.contains('hidden')) return;
+
                 state.zoomed = !state.zoomed;
                 el.imgContainer.classList.toggle('zoomed', state.zoomed);
                 [el.modalHeader, el.modalFooter].forEach(el => el.classList.toggle('hidden', state.zoomed));
@@ -309,23 +478,29 @@
                 if (state.zoomed) {
                     state.w = el.modalImg.offsetWidth;
                     state.h = el.modalImg.offsetHeight;
-                    panImg(e);
+                    const clientX = e.clientX || window.innerWidth / 2;
+                    const clientY = e.clientY || window.innerHeight / 2;
+                    const { panX, panY } = calculatePanValues(clientX, clientY);
+                    state.targetX = state.currentX = panX;
+                    state.targetY = state.currentY = panY;
+                    state.rafId = requestAnimationFrame(animationLoop);
                 } else {
+                    if (state.rafId) {
+                        cancelAnimationFrame(state.rafId);
+                        state.rafId = null;
+                    }
                     el.modalImg.style.transform = '';
                 }
             };
 
             const panImg = (e) => {
-                if (!state.zoomed || el.modalImg.classList.contains('hidden')) return;
-                const r = el.imgContainer.getBoundingClientRect();
-                const zoom = state.zoomLevel, pad = 40;
-                const overX = Math.max(0, state.w * zoom - r.width);
-                const overY = Math.max(0, state.h * zoom - r.height);
-                const xPct = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width));
-                const yPct = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
-                const panX = -(xPct - 0.5) * (overX + pad * 2);
-                const panY = -(yPct - 0.5) * (overY + pad * 2);
-                el.modalImg.style.transform = `scale(${zoom}) translate(${panX}px, ${panY}px)`;
+                // Only enable panning on desktop screens
+                if (!state.isDesktop || !state.zoomed || el.modalImg.classList.contains('hidden')) return;
+                const clientX = e.clientX;
+                const clientY = e.clientY;
+                const { panX, panY } = calculatePanValues(clientX, clientY);
+                state.targetX = panX;
+                state.targetY = panY;
             };
 
             const updateTime = () => {
@@ -346,24 +521,66 @@
 
             // Events
             el.stationSelect.addEventListener('change', e => updateStation(e.target.value));
+
             document.addEventListener('click', e => {
                 const card = e.target.closest('.card');
                 if (card) showModal(state.images.findIndex(i => i.url === card.dataset.url));
             });
-            el.imgContainer.addEventListener('click', e => { if (e.target === el.imgContainer) toggleZoom(e) });
+
+            // Click to zoom (desktop only)
+            el.imgContainer.addEventListener('click', toggleZoom);
+
+            // Mouse pan (desktop only)
             el.imgContainer.addEventListener('mousemove', panImg);
+
             el.closeBtn.addEventListener('click', hideModal);
             el.modal.addEventListener('click', e => { if (e.target === el.modal) hideModal() });
-            el.prevBtn.addEventListener('click', e => { e.stopPropagation(); if (state.idx > 0) showModal(state.idx - 1); });
-            el.nextBtn.addEventListener('click', e => { e.stopPropagation(); if (state.idx < state.images.length - 1) showModal(state.idx + 1); });
+
+            el.prevBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                if (state.idx > 0) showModal(state.idx - 1);
+            });
+
+            el.nextBtn.addEventListener('click', e => {
+                e.stopPropagation();
+                if (state.idx < state.images.length - 1) showModal(state.idx + 1);
+            });
+
             document.addEventListener('keydown', e => {
                 if (el.modal.classList.contains('hidden')) return;
                 if (e.key === 'Escape') hideModal();
                 if (e.key === 'ArrowLeft' && state.idx > 0) showModal(state.idx - 1);
                 if (e.key === 'ArrowRight' && state.idx < state.images.length - 1) showModal(state.idx + 1);
             });
+
+            // Swipe gestures for mobile navigation
+            let touchStartX = 0;
+            let touchEndX = 0;
+
+            el.modal.addEventListener('touchstart', e => {
+                if (e.target === el.modal || e.target.closest('#prevBtn') || e.target.closest('#nextBtn')) {
+                    touchStartX = e.changedTouches[0].screenX;
+                }
+            }, false);
+
+            el.modal.addEventListener('touchend', e => {
+                if (e.target === el.modal || e.target.closest('#prevBtn') || e.target.closest('#nextBtn')) {
+                    touchEndX = e.changedTouches[0].screenX;
+                    handleSwipe();
+                }
+            }, false);
+
+            function handleSwipe() {
+                const swipeThreshold = 50;
+                if (touchEndX < touchStartX - swipeThreshold && state.idx < state.images.length - 1) {
+                    showModal(state.idx + 1);
+                }
+                if (touchEndX > touchStartX + swipeThreshold && state.idx > 0) {
+                    showModal(state.idx - 1);
+                }
+            }
         });
     </script>
 </body>
-</html>
 
+</html>
