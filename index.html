@@ -4,9 +4,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nagpur Weather Radar & Satellite</title>
+    <title>IMD Weather Radar & Satellite Viewer - Live Doppler Radar Images</title>
+    
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="View live Doppler weather radar and satellite imagery from India Meteorological Department (IMD). Track rain, storms, and weather patterns across India with real-time radar data from 35+ stations.">
+    <meta name="keywords" content="IMD radar, weather radar India, doppler radar, satellite imagery, weather forecast, rainfall radar, IMD satellite, India weather, monsoon tracking">
+    <meta name="author" content="IMD Radar Viewer">
+    <meta name="robots" content="index, follow">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://bugaddr.github.io/imd_radar/">
+    <meta property="og:title" content="IMD Weather Radar & Satellite Viewer">
+    <meta property="og:description" content="View live Doppler weather radar and satellite imagery from India Meteorological Department. Track weather patterns across India in real-time.">
+    <meta property="og:image" content="https://bugaddr.github.io/imd_radar/preview.png">
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://bugaddr.github.io/imd_radar/">
+    <meta property="twitter:title" content="IMD Weather Radar & Satellite Viewer">
+    <meta property="twitter:description" content="View live Doppler weather radar and satellite imagery from India Meteorological Department.">
+    <meta property="twitter:image" content="https://bugaddr.github.io/imd_radar/preview.png">
+    
+    <!-- Theme and Icons -->
+    <meta name="theme-color" content="#0f172a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="icon"
         href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath fill='%2367E8F9' d='M75.9,53.3c-2.3-11.2-12.8-19.8-24.8-19.8c-1.5,0-3,0.2-4.4,0.5C41.2,23.3,31.3,16.5,19.6,16.5c-12,0-21.8,9.8-21.8,21.8c0,1.9,0.3,3.8,0.8,5.6C-3.8,49.1-12,59.3-12,71.3c0,13.1,10.7,23.8,23.8,23.8h63.5c10.3,0,18.8-8.4,18.8-18.8C94.1,64.2,86.2,55.6,75.9,53.3z' transform='translate(13,-5)'/%3E%3Cpath fill='%23FBBF24' d='M50,10a20 20 0 1 1 0,40a20 20 0 0 1 0-40z' transform='scale(0.8) translate(-40,-5)'/%3E%3C/svg%3E">
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Structured Data for SEO -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "IMD Weather Radar & Satellite Viewer",
+        "description": "View live Doppler weather radar and satellite imagery from India Meteorological Department (IMD). Track rain, storms, and weather patterns across India with real-time radar data.",
+        "url": "https://bugaddr.github.io/imd_radar/",
+        "applicationCategory": "UtilityApplication",
+        "operatingSystem": "Any",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "IMD Radar Viewer"
+        },
+        "provider": {
+            "@type": "Organization",
+            "name": "India Meteorological Department",
+            "url": "https://mausam.imd.gov.in/"
+        },
+        "featureList": [
+            "Live Doppler Weather Radar",
+            "Satellite Imagery",
+            "35+ Weather Stations across India",
+            "Real-time Weather Tracking",
+            "Interactive Image Viewer"
+        ]
+    }
+    </script>
+    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -119,10 +180,29 @@
         * {
             touch-action: manipulation;
         }
+
+        /* Skip to main content link for accessibility */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: #3b82f6;
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 100;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
     </style>
 </head>
 
 <body class="bg-slate-900 text-slate-300">
+    <!-- Skip to main content link for accessibility -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
     <div class="min-h-screen px-3 py-4 sm:px-4 md:px-6 lg:px-8">
         <!-- Header -->
         <header class="max-w-7xl mx-auto mb-6 sm:mb-8">
@@ -130,11 +210,19 @@
                 class="bg-slate-800/60 backdrop-blur-lg rounded-xl shadow-lg p-3 sm:p-4 md:p-6 border border-slate-700">
                 <div class="flex flex-col items-center text-center w-full">
                     <!-- Title -->
-                    <div class="flex items-center mb-3 sm:mb-4">
+                    <div class="flex items-center justify-center mb-3 sm:mb-4 relative w-full">
                         <h1
                             class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-100 tracking-tight px-2">
                             IMD Doppler Radar & Satellite
                         </h1>
+                        <button id="helpBtn" 
+                            class="absolute right-0 p-2 text-slate-400 hover:text-slate-200 transition-colors rounded-lg hover:bg-slate-700/50"
+                            aria-label="Keyboard shortcuts help"
+                            title="Keyboard shortcuts (Press ?)">
+                            <svg class="h-5 w-5 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                        </button>
                     </div>
 
                     <!-- Controls -->
@@ -166,7 +254,7 @@
             </div>
         </header>
 
-        <main class="max-w-7xl mx-auto">
+        <main id="main-content" class="max-w-7xl mx-auto">
             <!-- Radar Section -->
             <section class="mb-8 sm:mb-10 md:mb-12">
                 <h2
@@ -203,9 +291,14 @@
 
     <!-- Modal -->
     <div id="modal"
-        class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm hidden items-center justify-center z-50 p-2 sm:p-4">
+        class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm hidden items-center justify-center z-50 p-2 sm:p-4"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="modalTitle"
+        aria-describedby="modalDesc">
         <div
-            class="relative bg-slate-800 rounded-lg w-full max-w-[95vw] sm:max-w-6xl h-[90vh] sm:h-[85vh] md:h-[90vh] flex flex-col shadow-2xl border border-slate-700">
+            class="relative bg-slate-800 rounded-lg w-full max-w-[95vw] sm:max-w-6xl h-[90vh] sm:h-[85vh] md:h-[90vh] flex flex-col shadow-2xl border border-slate-700"
+            role="document">
             <!-- Modal Header -->
             <div id="modalHeader"
                 class="flex justify-between items-center p-2 sm:p-3 md:p-4 border-b border-slate-700 flex-shrink-0">
@@ -260,8 +353,88 @@
         </div>
     </div>
 
+    <!-- Help Modal -->
+    <div id="helpModal"
+        class="fixed inset-0 bg-black bg-opacity-80 backdrop-blur-sm hidden items-center justify-center z-50 p-4">
+        <div class="relative bg-slate-800 rounded-lg w-full max-w-2xl shadow-2xl border border-slate-700">
+            <div class="flex justify-between items-center p-4 border-b border-slate-700">
+                <h3 class="text-lg font-semibold text-slate-100">Keyboard Shortcuts</h3>
+                <button id="closeHelpBtn" class="text-slate-400 hover:text-slate-200 p-2" aria-label="Close help">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+            <div class="p-6 space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div class="space-y-3">
+                        <h4 class="font-semibold text-slate-200 text-sm uppercase tracking-wide">Image Viewer</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">Next Image</span>
+                                <kbd class="px-2 py-1 bg-slate-700 rounded text-slate-200 font-mono text-xs">→</kbd>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">Previous Image</span>
+                                <kbd class="px-2 py-1 bg-slate-700 rounded text-slate-200 font-mono text-xs">←</kbd>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">Close Viewer</span>
+                                <kbd class="px-2 py-1 bg-slate-700 rounded text-slate-200 font-mono text-xs">ESC</kbd>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">Zoom (Desktop)</span>
+                                <kbd class="px-2 py-1 bg-slate-700 rounded text-slate-200 font-mono text-xs">Click</kbd>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-y-3">
+                        <h4 class="font-semibold text-slate-200 text-sm uppercase tracking-wide">General</h4>
+                        <div class="space-y-2 text-sm">
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">Open Help</span>
+                                <kbd class="px-2 py-1 bg-slate-700 rounded text-slate-200 font-mono text-xs">?</kbd>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-slate-400">Close Help</span>
+                                <kbd class="px-2 py-1 bg-slate-700 rounded text-slate-200 font-mono text-xs">ESC</kbd>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="pt-4 border-t border-slate-700">
+                    <h4 class="font-semibold text-slate-200 text-sm mb-2">Tips</h4>
+                    <ul class="text-sm text-slate-400 space-y-1 list-disc list-inside">
+                        <li>Click any image card to view it in full screen</li>
+                        <li>On desktop, click the zoomed image to toggle zoom in/out</li>
+                        <li>Move your mouse to pan around zoomed images</li>
+                        <li>On mobile, swipe left/right to navigate between images</li>
+                        <li>Images refresh automatically from IMD servers</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
+        /**
+         * IMD Weather Radar & Satellite Viewer
+         * 
+         * This application displays real-time weather radar and satellite imagery
+         * from the India Meteorological Department (IMD).
+         * 
+         * Features:
+         * - 35+ weather radar stations across India
+         * - Multiple radar products (CAZ, PPI, SRI, etc.)
+         * - Satellite imagery (IR, Visible, Water Vapour, CTBT)
+         * - Interactive image viewer with zoom and pan
+         * - Keyboard shortcuts for navigation
+         * - Responsive design for mobile and desktop
+         * - Accessibility features (ARIA labels, keyboard navigation)
+         */
         document.addEventListener('DOMContentLoaded', () => {
+            // Station configuration: Maps station codes to full names with states
             const stations = {
                 agt: 'Agartala (Tripura)', aya: 'Ayanagar (Delhi)', bhj: 'Bhuj (Gujarat)', bhp: 'Bhopal (Madhya Pradesh)',
                 bnh: 'Banihal (Jammu & Kashmir)', cni: 'Chennai (Tamil Nadu)', cpj: 'Sohra (Meghalaya)', delhi: 'Delhi',
@@ -277,6 +450,8 @@
                 vsk: 'Vishakhapatnam (Andhra Pradesh)'
             };
 
+            // Radar products configuration
+            // Each product has a title, IMD URL pattern, and user-friendly description
             const radarData = [
                 { title: 'Combined Azimuth Range (CAZ)', url: 'https://mausam.imd.gov.in/Radar/caz_{s}.gif', desc: 'Your best all-in-one view. See exactly where it\'s raining around your selected region right now and how heavy it is.' },
                 { title: 'Plan Position Indicator (PPI)', url: 'https://mausam.imd.gov.in/Radar/ppi_{s}.gif', desc: 'A classic top-down radar sweep, showing precipitation detected at a single, fixed angle.' },
@@ -289,6 +464,8 @@
                 { title: 'Max Reflectivity (Animated)', url: 'https://mausam.imd.gov.in/Radar/animation/Converted/{S}_MAXZ.gif', desc: 'Tracks the storm\'s powerhouse, showing where the heaviest rain or hail is.', gif: true }
             ];
 
+            // Satellite imagery configuration
+            // Includes both static and animated imagery from Asia sector and global view
             const satelliteData = [
                 { title: 'Asia Sector - Infrared', url: 'https://mausam.imd.gov.in/Satellite/3Dasiasec_ir1.jpg', desc: 'See clouds day and night. Bright white tops represent taller, colder clouds.' },
                 { title: 'Asia Sector - Visible', url: 'https://mausam.imd.gov.in/Satellite/3Dasiasec_vis.jpg', desc: 'A real-life photo from space showing cloud cover right now.' },
@@ -303,6 +480,7 @@
                 { title: 'CTBT (Animated)', url: 'https://mausam.imd.gov.in/Satellite/Converted/CTBT.gif', desc: 'Track storm intensity over time. See which storms are growing stronger.', gif: true }
             ];
 
+            // DOM element references for efficient access
             const el = {
                 stationSelect: document.getElementById('stationSelect'),
                 timestamp: document.getElementById('timestamp'),
@@ -321,9 +499,15 @@
                 modalPlaceholder: document.getElementById('modalPlaceholder'),
                 modalPlaceholderText: document.getElementById('modalPlaceholderText'),
                 modalSpinner: document.getElementById('modalSpinner'),
+                helpModal: document.getElementById('helpModal'),
+                helpBtn: document.getElementById('helpBtn'),
+                closeHelpBtn: document.getElementById('closeHelpBtn'),
             };
 
+            // Smoothing factor for pan animation (0-1, lower = smoother)
             const SMOOTHING_FACTOR = 0.15;
+            
+            // Application state
             let state = {
                 images: [],
                 idx: 0,
@@ -351,16 +535,20 @@
                 const url = data.url.replace('{s}', station.toLowerCase()).replace('{S}', station.toUpperCase());
                 return `<div class="card bg-slate-800 rounded-lg overflow-hidden border border-slate-700 cursor-pointer flex flex-col"
                              style="animation-delay: ${delay}ms;"
-                             data-url="${url}" data-title="${data.title}" data-desc="${data.desc}">
+                             data-url="${url}" data-title="${data.title}" data-desc="${data.desc}"
+                             role="button"
+                             tabindex="0"
+                             aria-label="View ${data.title}"
+                             onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();this.click();}">
                         <div class="p-2 sm:p-3 border-b border-slate-700 flex-shrink-0">
                             <h3 class="text-xs sm:text-sm font-semibold text-slate-200 flex items-center justify-center gap-2 text-center">
                                 <span class="line-clamp-2">${data.title}</span>
-                                ${data.gif ? '<span class="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 text-xs font-medium rounded-md flex-shrink-0">GIF</span>' : ''}
+                                ${data.gif ? '<span class="px-1.5 py-0.5 bg-blue-500/20 text-blue-300 text-xs font-medium rounded-md flex-shrink-0" aria-label="Animated GIF">GIF</span>' : ''}
                             </h3>
                         </div>
                         <div class="bg-slate-900/50 flex items-center justify-center aspect-square text-slate-400 text-xs text-center p-2 relative">
-                            <div class="absolute inset-0 bg-slate-700/50 img-placeholder-pulse"></div>
-                            <p class="absolute inset-0 hidden items-center justify-center text-center p-2">Image<br>Not Available</p>
+                            <div class="absolute inset-0 bg-slate-700/50 img-placeholder-pulse" aria-hidden="true"></div>
+                            <p class="absolute inset-0 hidden items-center justify-center text-center p-2" role="alert">Image<br>Not Available</p>
                             <img src="${url}" alt="${data.title}" class="w-full h-full object-contain relative" loading="lazy"
                                  onload="this.previousElementSibling.previousElementSibling.style.display='none'"
                                  onerror="this.style.display='none'; this.previousElementSibling.style.display='flex'; this.previousElementSibling.previousElementSibling.style.display='none'">
@@ -385,6 +573,8 @@
             const showModal = (idx) => {
                 state.idx = idx;
                 const img = state.images[idx];
+                let retryCount = 0;
+                const maxRetries = 2;
 
                 el.modalImg.classList.add('hidden');
                 el.modalPlaceholder.classList.add('hidden');
@@ -392,22 +582,31 @@
                 el.modalSpinner.classList.remove('hidden');
                 el.modalSpinner.classList.add('flex');
 
-                el.modalImg.src = img.url;
+                const loadImage = () => {
+                    el.modalImg.src = img.url + (retryCount > 0 ? `?retry=${retryCount}` : '');
 
-                el.modalImg.onload = () => {
-                    el.modalSpinner.classList.add('hidden');
-                    el.modalSpinner.classList.remove('flex');
-                    el.modalImg.classList.remove('hidden');
+                    el.modalImg.onload = () => {
+                        el.modalSpinner.classList.add('hidden');
+                        el.modalSpinner.classList.remove('flex');
+                        el.modalImg.classList.remove('hidden');
+                    };
+
+                    el.modalImg.onerror = () => {
+                        if (retryCount < maxRetries) {
+                            retryCount++;
+                            setTimeout(loadImage, 1000 * retryCount); // Exponential backoff
+                        } else {
+                            el.modalSpinner.classList.add('hidden');
+                            el.modalSpinner.classList.remove('flex');
+                            el.modalImg.classList.add('hidden');
+                            el.modalPlaceholderText.innerHTML = `${img.title}<br>Not Available<br><small class="text-slate-500">Unable to load after ${maxRetries} retries</small>`;
+                            el.modalPlaceholder.classList.remove('hidden');
+                            el.modalPlaceholder.classList.add('flex');
+                        }
+                    };
                 };
 
-                el.modalImg.onerror = () => {
-                    el.modalSpinner.classList.add('hidden');
-                    el.modalSpinner.classList.remove('flex');
-                    el.modalImg.classList.add('hidden');
-                    el.modalPlaceholderText.innerHTML = `${img.title}<br>Not Available`;
-                    el.modalPlaceholder.classList.remove('hidden');
-                    el.modalPlaceholder.classList.add('flex');
-                };
+                loadImage();
 
                 el.modalTitle.textContent = img.title;
                 el.modalDesc.textContent = img.desc;
@@ -420,8 +619,9 @@
                 el.modal.classList.remove('hidden');
                 el.modal.classList.add('flex');
 
-                // Prevent body scroll on mobile when modal is open
+                // Prevent body scroll and set focus for accessibility
                 document.body.style.overflow = 'hidden';
+                el.closeBtn.focus();
             };
 
             const hideModal = () => {
@@ -547,11 +747,43 @@
             });
 
             document.addEventListener('keydown', e => {
+                // Help modal shortcuts
+                if (e.key === '?' && !el.modal.classList.contains('flex') && !el.helpModal.classList.contains('flex')) {
+                    e.preventDefault();
+                    showHelp();
+                    return;
+                }
+                
+                // Help modal navigation
+                if (!el.helpModal.classList.contains('hidden')) {
+                    if (e.key === 'Escape') hideHelp();
+                    return;
+                }
+                
+                // Image modal navigation
                 if (el.modal.classList.contains('hidden')) return;
                 if (e.key === 'Escape') hideModal();
                 if (e.key === 'ArrowLeft' && state.idx > 0) showModal(state.idx - 1);
                 if (e.key === 'ArrowRight' && state.idx < state.images.length - 1) showModal(state.idx + 1);
             });
+
+            // Help modal functions
+            const showHelp = () => {
+                el.helpModal.classList.remove('hidden');
+                el.helpModal.classList.add('flex');
+                document.body.style.overflow = 'hidden';
+            };
+
+            const hideHelp = () => {
+                el.helpModal.classList.add('hidden');
+                el.helpModal.classList.remove('flex');
+                document.body.style.overflow = '';
+            };
+
+            // Help modal event handlers
+            el.helpBtn.addEventListener('click', showHelp);
+            el.closeHelpBtn.addEventListener('click', hideHelp);
+            el.helpModal.addEventListener('click', e => { if (e.target === el.helpModal) hideHelp() });
 
             // Swipe gestures for mobile navigation
             let touchStartX = 0;
