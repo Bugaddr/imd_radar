@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IMD Weather Radar & Satellite Viewer - Live Doppler Radar Images</title>
+    <title>IMD Weather Radar &amp; Satellite Viewer - Live Doppler Radar Images</title>
     
     <!-- SEO Meta Tags -->
     <meta name="description" content="View live Doppler weather radar and satellite imagery from India Meteorological Department (IMD). Track rain, storms, and weather patterns across India with real-time radar data from 35+ stations.">
@@ -15,14 +15,14 @@
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://bugaddr.github.io/imd_radar/">
-    <meta property="og:title" content="IMD Weather Radar & Satellite Viewer">
+    <meta property="og:title" content="IMD Weather Radar &amp; Satellite Viewer">
     <meta property="og:description" content="View live Doppler weather radar and satellite imagery from India Meteorological Department. Track weather patterns across India in real-time.">
     <meta property="og:image" content="https://bugaddr.github.io/imd_radar/preview.png">
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image">
     <meta property="twitter:url" content="https://bugaddr.github.io/imd_radar/">
-    <meta property="twitter:title" content="IMD Weather Radar & Satellite Viewer">
+    <meta property="twitter:title" content="IMD Weather Radar &amp; Satellite Viewer">
     <meta property="twitter:description" content="View live Doppler weather radar and satellite imagery from India Meteorological Department.">
     <meta property="twitter:image" content="https://bugaddr.github.io/imd_radar/preview.png">
     
@@ -213,7 +213,7 @@
                     <div class="flex items-center justify-center mb-3 sm:mb-4 relative w-full">
                         <h1
                             class="text-xl sm:text-2xl md:text-3xl lg:text-4xl font-bold text-slate-100 tracking-tight px-2">
-                            IMD Doppler Radar & Satellite
+                            IMD Doppler Radar &amp; Satellite
                         </h1>
                         <button id="helpBtn" 
                             class="absolute right-0 p-2 text-slate-400 hover:text-slate-200 transition-colors rounded-lg hover:bg-slate-700/50"
@@ -236,7 +236,7 @@
                                 class="flex-grow sm:flex-grow-0 bg-slate-700 border border-slate-600 text-slate-200 rounded-lg text-sm p-2 sm:p-1.5 focus:ring-blue-500 focus:border-blue-500 min-w-0 sm:min-w-[200px]">
                             </select>
                         </div>
-                        <!-- Live Status & Timestamp -->
+                        <!-- Live Status &amp; Timestamp -->
                         <div
                             class="flex items-center justify-center gap-2 sm:gap-3 text-xs sm:text-sm text-slate-400 flex-wrap">
                             <div class="flex items-center gap-1.5">
@@ -272,6 +272,16 @@
                     Satellite Imagery
                 </h2>
                 <div id="satelliteGrid"
+                    class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5"></div>
+            </section>
+
+            <!-- National Composites Section -->
+            <section class="mb-8 sm:mb-10">
+                <h2
+                    class="text-lg sm:text-xl md:text-2xl font-semibold mb-3 sm:mb-4 pb-2 border-b border-slate-700 text-slate-200">
+                    National Composites
+                </h2>
+                <div id="compositeGrid"
                     class="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 md:gap-5"></div>
             </section>
         </main>
@@ -419,7 +429,7 @@
 
     <script>
         /**
-         * IMD Weather Radar & Satellite Viewer
+         * IMD Weather Radar &amp; Satellite Viewer
          * 
          * This application displays real-time weather radar and satellite imagery
          * from the India Meteorological Department (IMD).
@@ -480,12 +490,19 @@
                 { title: 'CTBT (Animated)', url: 'https://mausam.imd.gov.in/Satellite/Converted/CTBT.gif', desc: 'Track storm intensity over time. See which storms are growing stronger.', gif: true }
             ];
 
+            // National Composites configuration
+            const compositeData = [
+                { title: 'Radar Mosaic (Animated)', url: 'https://mausam.imd.gov.in/Radar/MOSAIC/Converted/mosaic.gif', desc: 'A composite all-India radar mosaic showing rainfall across the entire country in real-time.', gif: true },
+                { title: 'Lightning (BT)', url: 'https://mausam.imd.gov.in/lightning/Converted/BT.gif', desc: 'Live lightning strike map across India. Track thunderstorm activity and dangerous lightning in real-time.', gif: true }
+            ];
+
             // DOM element references for efficient access
             const el = {
                 stationSelect: document.getElementById('stationSelect'),
                 timestamp: document.getElementById('timestamp'),
                 radarGrid: document.getElementById('radarGrid'),
                 satelliteGrid: document.getElementById('satelliteGrid'),
+                compositeGrid: document.getElementById('compositeGrid'),
                 modal: document.getElementById('modal'),
                 modalImg: document.getElementById('modalImg'),
                 modalTitle: document.getElementById('modalTitle'),
@@ -562,6 +579,7 @@
 
                 el.radarGrid.innerHTML = radarData.map((d, i) => createCard(d, code, i * 40)).join('');
                 el.satelliteGrid.innerHTML = satelliteData.map((d, i) => createCard(d, code, (radarData.length + i) * 40)).join('');
+                el.compositeGrid.innerHTML = compositeData.map((d, i) => createCard(d, code, (radarData.length + satelliteData.length + i) * 40)).join('');
 
                 state.images = [...document.querySelectorAll('.card')].map(c => ({
                     url: c.dataset.url,
